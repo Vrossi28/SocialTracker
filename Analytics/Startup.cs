@@ -1,4 +1,3 @@
-using Analytics.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,8 +33,6 @@ namespace Analytics
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Analytics", Version = "v1" });
             });
             services.AddOptions();
-            services.Configure<SettingsRoot>(Configuration.GetSection("Tokens"));
-            services.Configure<SettingsRoot>(Configuration.GetSection("Logging"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

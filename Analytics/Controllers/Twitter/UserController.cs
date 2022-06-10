@@ -1,5 +1,4 @@
-﻿using Analytics.Configuration;
-using ExternalIntegration.Twitter;
+﻿using ExternalIntegration.Twitter;
 using ExternalIntegration.Twitter.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
