@@ -45,18 +45,33 @@ namespace Analytics.Controllers.Twitter
         }
 
         [HttpGet]
-        [Route("{idUser}/PublicMetrics")]
-        [ResponseType(typeof(UserInformations))]
+        [Route("{idUser}/BaseData")]
         // GET: PublicMetrics
-        public async Task<IActionResult> GetPublicMetrics(string idUser)
+        public async Task<IUserBasicInformations> GetBaseData(string idUser)
         {
             HttpClient httpClient = _twitterService.BearerAuthentication(BEARER);
-            var response = await httpClient.GetAsync($"users/{idUser}?user.fields=public_metrics,created_at");
+            var response = await httpClient.GetAsync($"users/{idUser}");
             var stream = await response.Content.ReadAsStringAsync();
 
-            UserInformations result = JsonConvert.DeserializeObject<UserInformations>(stream);
+            IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
 
-            return Ok(result);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("{idUser}/AllInformations")]
+        // GET: PublicMetrics
+        public async Task<IUserAllInformations> GetAllInformations(string idUser)
+        {
+            HttpClient httpClient = _twitterService.BearerAuthentication(BEARER);
+            var response = await httpClient
+                .GetAsync($"users/{idUser}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
+                $"%2Clocation%2Cdescription%2Centities%2Curl");
+            var stream = await response.Content.ReadAsStringAsync();
+
+            IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
+
+            return result;
         }
     }
 }
