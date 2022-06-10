@@ -1,3 +1,4 @@
+using Analytics.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,22 +17,25 @@ namespace Analytics
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration _configuration)
         {
-            Configuration = configuration;
+            Configuration = _configuration;
         }
 
         public IConfiguration Configuration { get; }
+        public IConfigurationRoot ConfigRoot { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Analytics", Version = "v1" });
             });
+            services.AddOptions();
+            services.Configure<SettingsRoot>(Configuration.GetSection("Tokens"));
+            services.Configure<SettingsRoot>(Configuration.GetSection("Logging"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +58,12 @@ namespace Analytics
             {
                 endpoints.MapControllers();
             });
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            ConfigRoot = builder.Build();
         }
     }
 }

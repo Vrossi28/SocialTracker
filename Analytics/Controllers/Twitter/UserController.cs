@@ -1,87 +1,62 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Analytics.Configuration;
+using ExternalIntegration.Twitter;
+using ExternalIntegration.Twitter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Http.Description;
 
 namespace Analytics.Controllers.Twitter
 {
-    public class UserController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase
     {
-        // GET: UserController
-        public ActionResult Index()
+
+        private readonly IConfiguration _configuration;
+        //private Token _token;
+        private TwitterService _twitterService = new TwitterService();
+        private static readonly string BEARER = "AAAAAAAAAAAAAAAAAAAAALDHdQEAAAAAe6daC47bJsdM4MwYgLDIm8lomNo%3DKgmYYm6C4ZQLACC966jvvHRCwwY92W8700p3aKtDX1qZKYjJLf";
+        private static readonly string CONSUMER_KEY = "qmQNsadxMHI061vCIfZPAET2E";
+        private static readonly string CONSUMER_KEY_SECRET = "yVURzxZLbAn1uRVz4wytTXojfNrd9IKkvMNd5JOinROqKWI5Vi";
+        private static readonly string ACCESS_TOKEN = "3027896394-IE3dQiwgtFxhcNQIStPQswBCVEEY4MayFXiK37O";
+        private static readonly string ACCESS_TOKEN_SECRET = "U3kh3aM7yEryec8t27l8v48TbXATv7q3L5bZdGoMH804L";
+        private static readonly string CLIENT_ID = "ekkwaEFXdjBJLWFUSjB4R2JCZEw6MTpjaQ";
+        private static readonly string CLIENT_ID_SECRET = "TgHXBuLqSoIEMgCSgIVVseuwsjY-4fL2fLxzTd_PNolRxa0Jmw";
+
+
+
+        public UserController(IConfiguration configuration)
         {
-            return View();
+            _configuration = configuration;
+            /*_token.AccessToken = _configuration.GetSection("Tokens:AcessToken").Value;
+            _token.AccessTokenSecret = _configuration.GetSection("Token:AccessTokenSecret").Value;
+            _token.Bearer = _configuration.GetSection("Token:Bearer").Value;
+            _token.ClientID = _configuration.GetSection("Token:ClientID").Value;
+            _token.ClientSecret = _configuration.GetSection("Token:ClientSecret").Value;
+            _token.ConsumerKey = _configuration.GetSection("Token:ConsumerKey").Value;
+            _token.ConsumerKeySecret = _configuration.GetSection("Token:ConsumerKeySecret").Value;*/
         }
 
-        // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        [Route("{idUser}/PublicMetrics")]
+        [ResponseType(typeof(UserInformations))]
+        // GET: PublicMetrics
+        public async Task<IActionResult> GetPublicMetrics(string idUser)
         {
-            return View();
-        }
+            HttpClient httpClient = _twitterService.BearerAuthentication(BEARER);
+            var response = await httpClient.GetAsync($"users/{idUser}?user.fields=public_metrics,created_at");
+            var stream = await response.Content.ReadAsStringAsync();
 
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+            UserInformations result = JsonConvert.DeserializeObject<UserInformations>(stream);
 
-        // POST: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UserController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok(result);
         }
     }
 }
