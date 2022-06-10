@@ -21,15 +21,6 @@ namespace Analytics.Controllers.Twitter
         private readonly IConfiguration _configuration;
         //private Token _token;
         private TwitterService _twitterService = new TwitterService();
-        private static readonly string BEARER = "AAAAAAAAAAAAAAAAAAAAALDHdQEAAAAAe6daC47bJsdM4MwYgLDIm8lomNo%3DKgmYYm6C4ZQLACC966jvvHRCwwY92W8700p3aKtDX1qZKYjJLf";
-        private static readonly string CONSUMER_KEY = "qmQNsadxMHI061vCIfZPAET2E";
-        private static readonly string CONSUMER_KEY_SECRET = "yVURzxZLbAn1uRVz4wytTXojfNrd9IKkvMNd5JOinROqKWI5Vi";
-        private static readonly string ACCESS_TOKEN = "3027896394-IE3dQiwgtFxhcNQIStPQswBCVEEY4MayFXiK37O";
-        private static readonly string ACCESS_TOKEN_SECRET = "U3kh3aM7yEryec8t27l8v48TbXATv7q3L5bZdGoMH804L";
-        private static readonly string CLIENT_ID = "ekkwaEFXdjBJLWFUSjB4R2JCZEw6MTpjaQ";
-        private static readonly string CLIENT_ID_SECRET = "TgHXBuLqSoIEMgCSgIVVseuwsjY-4fL2fLxzTd_PNolRxa0Jmw";
-
-
 
         public UserController(IConfiguration configuration)
         {
@@ -44,12 +35,12 @@ namespace Analytics.Controllers.Twitter
         }
 
         [HttpGet]
-        [Route("{idUser}/BaseData")]
+        [Route("{username}/BaseData")]
         // GET: PublicMetrics
-        public async Task<IUserBasicInformations> GetBaseData(string idUser)
+        public async Task<IUserBasicInformations> GetBaseDataByUsername(string username)
         {
-            HttpClient httpClient = _twitterService.BearerAuthentication(BEARER);
-            var response = await httpClient.GetAsync($"users/{idUser}");
+            HttpClient httpClient = _twitterService.BearerAuthentication();
+            var response = await httpClient.GetAsync($"users/by/username/{username}");
             var stream = await response.Content.ReadAsStringAsync();
 
             IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
@@ -58,13 +49,13 @@ namespace Analytics.Controllers.Twitter
         }
 
         [HttpGet]
-        [Route("{idUser}/AllInformations")]
+        [Route("{username}/AllInformations")]
         // GET: PublicMetrics
-        public async Task<IUserAllInformations> GetAllInformations(string idUser)
+        public async Task<IUserAllInformations> GetAllInformationsByUsername(string username)
         {
-            HttpClient httpClient = _twitterService.BearerAuthentication(BEARER);
+            HttpClient httpClient = _twitterService.BearerAuthentication();
             var response = await httpClient
-                .GetAsync($"users/{idUser}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
+                .GetAsync($"users/by/username/{username}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
                 $"%2Clocation%2Cdescription%2Centities%2Curl");
             var stream = await response.Content.ReadAsStringAsync();
 
