@@ -42,7 +42,7 @@ namespace Analytics.Controllers.Twitter
         [HttpGet]
         [Route("{username}/BaseData")]
         // GET: BaseData
-        public async Task<IUserBasicInformations> GetBaseDataByUsername(string username)
+        public async Task<IUserBaseData> GetBaseDataByUsername(string username)
         {
             HttpClient httpClient = _twitterIntegration.BearerAuthentication();
             var response = await httpClient.GetAsync($"users/by/username/{username}");
@@ -50,13 +50,13 @@ namespace Analytics.Controllers.Twitter
 
             IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
 
-            return result;
+            return result.data;
         }
 
         [HttpGet]
         [Route("{username}/AllInformations")]
         // GET: AllInformations
-        public async Task<IUserAllInformations> GetAllInformationsByUsername(string username)
+        public async Task<IUserAllData> GetAllInformationsByUsername(string username)
         {
             HttpClient httpClient = _twitterIntegration.BearerAuthentication();
             var response = await httpClient
@@ -66,7 +66,7 @@ namespace Analytics.Controllers.Twitter
 
             IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
 
-            return result;
+            return result.data;
         }
 
         [HttpPost]
@@ -75,7 +75,7 @@ namespace Analytics.Controllers.Twitter
         public async Task<UserFollowData> Follow(string username)
         {
             var userData = GetBaseDataByUsername(username);
-            var idUser = userData.Result.data.id;
+            var idUser = userData.Result.id;
             var request = TwitterIntegration.OAuthAuthenticationFollow();
             var body = @"{" + "\n" +
             @$"    ""target_user_id"": ""{idUser}""" + "\n" +
