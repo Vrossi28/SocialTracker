@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http.Description;
+using TweetSharp;
 
 namespace Analytics.Controllers.Twitter
 {
@@ -20,7 +23,9 @@ namespace Analytics.Controllers.Twitter
 
         private readonly IConfiguration _configuration;
         //private Token _token;
-        private TwitterService _twitterService = new TwitterService();
+        private TwitterIntegration _twitterIntegration = new TwitterIntegration();
+        private TwitterService twitterService = new TwitterService();
+        private RestClient client = new RestClient("https://api.twitter.com/2/");
 
         public UserController(IConfiguration configuration)
         {
@@ -36,10 +41,10 @@ namespace Analytics.Controllers.Twitter
 
         [HttpGet]
         [Route("{username}/BaseData")]
-        // GET: PublicMetrics
+        // GET: BaseData
         public async Task<IUserBasicInformations> GetBaseDataByUsername(string username)
         {
-            HttpClient httpClient = _twitterService.BearerAuthentication();
+            HttpClient httpClient = _twitterIntegration.BearerAuthentication();
             var response = await httpClient.GetAsync($"users/by/username/{username}");
             var stream = await response.Content.ReadAsStringAsync();
 
@@ -50,10 +55,10 @@ namespace Analytics.Controllers.Twitter
 
         [HttpGet]
         [Route("{username}/AllInformations")]
-        // GET: PublicMetrics
+        // GET: AllInformations
         public async Task<IUserAllInformations> GetAllInformationsByUsername(string username)
         {
-            HttpClient httpClient = _twitterService.BearerAuthentication();
+            HttpClient httpClient = _twitterIntegration.BearerAuthentication();
             var response = await httpClient
                 .GetAsync($"users/by/username/{username}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
                 $"%2Clocation%2Cdescription%2Centities%2Curl");
@@ -62,6 +67,25 @@ namespace Analytics.Controllers.Twitter
             IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
 
             return result;
+        }
+
+        [HttpPost]
+        [Route("{username}/Follow")]
+        // POST: Follow
+        public async Task<UserFollowData> Follow(string username)
+        {
+            var userData = GetBaseDataByUsername(username);
+            var idUser = userData.Result.data.id;
+            var request = TwitterIntegration.OAuthAuthenticationFollow();
+            var body = @"{" + "\n" +
+            @$"    ""target_user_id"": ""{idUser}""" + "\n" +
+            @"}";
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+            RestResponse response = client.Execute(request);
+            var stream = response.Content;
+
+            IUserFollow result = JsonConvert.DeserializeObject<UserFollow>(stream);
+            return result.data;
         }
     }
 }

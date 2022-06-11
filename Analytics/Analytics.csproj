@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RestSharp" Version="108.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="TweetSharp" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>
