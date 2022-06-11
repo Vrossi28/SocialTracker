@@ -1,6 +1,7 @@
-﻿using Analytics.Responses;
-using ExternalIntegration.Twitter;
+﻿using ExternalIntegration.Twitter;
 using ExternalIntegration.Twitter.Models;
+using ExternalIntegration.Twitter.Requests;
+using ExternalIntegration.Twitter.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -25,74 +26,38 @@ namespace Analytics.Controllers.Twitter
     {
 
         private readonly IConfiguration _configuration;
-        //private Token _token;
-        private TwitterIntegration _twitterIntegration = new TwitterIntegration();
-        private TwitterService twitterService = new TwitterService();
-        private RestClient client = new RestClient("https://api.twitter.com/2/");
 
         public UserController(IConfiguration configuration)
         {
             _configuration = configuration;
-            /*_token.AccessToken = _configuration.GetSection("Tokens:AcessToken").Value;
-            _token.AccessTokenSecret = _configuration.GetSection("Token:AccessTokenSecret").Value;
-            _token.Bearer = _configuration.GetSection("Token:Bearer").Value;
-            _token.ClientID = _configuration.GetSection("Token:ClientID").Value;
-            _token.ClientSecret = _configuration.GetSection("Token:ClientSecret").Value;
-            _token.ConsumerKey = _configuration.GetSection("Token:ConsumerKey").Value;
-            _token.ConsumerKeySecret = _configuration.GetSection("Token:ConsumerKeySecret").Value;*/
         }
 
         [HttpGet]
         [Route("{username}/BaseData")]
         // GET: BaseData
-        public async Task<IUserBaseData> GetBaseDataByUsername(string username)
+        public async Task<DefaultResponse<IUserBasicInformations>> GetBaseDataByUsername(string username)
         {
-            HttpClient httpClient = _twitterIntegration.BearerAuthentication();
-            var response = await httpClient.GetAsync($"users/by/username/{username}");
-            var stream = await response.Content.ReadAsStringAsync();
+            var response = await Users.GetBaseDataByUsername(username);
 
-            IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
-
-            return result.data;
+            return response;
         }
 
         [HttpGet]
-        [Route("{username}/AllInformations")]
+        [Route("{username}/AllData")]
         // GET: AllInformations
-        public async Task<IUserAllData> GetAllInformationsByUsername(string username)
+        public async Task<DefaultResponse<IUserAllInformations>> GetAllDataByUsername(string username)
         {
-            HttpClient httpClient = _twitterIntegration.BearerAuthentication();
-            var response = await httpClient
-                .GetAsync($"users/by/username/{username}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
-                $"%2Clocation%2Cdescription%2Centities%2Curl");
-            var stream = await response.Content.ReadAsStringAsync();
-
-            IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
-
-            return result.data;
+            var response = await Users.GetAllDataByUsername(username);
+            return response;
         }
 
         [HttpPost]
         [Route("{username}/Follow")]
         // POST: Follow
-        public async Task<IActionResult> Follow(string username)
+        public async Task<DefaultResponse<IUserFollow>> Follow(string username)
         {
-            var userData = await GetBaseDataByUsername(username);
-            if(userData == null)
-            {
-                return NotFound(new DefaultResponse<object> { Status = 404, Data = null, Message = $"User: {username} was not found!" });
-            }
-            var idUser = userData.id;
-            var request = TwitterIntegration.OAuthAuthenticationFollow();
-            var body = @"{" + "\n" +
-            @$"    ""target_user_id"": ""{idUser}""" + "\n" +
-            @"}";
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
-            RestResponse response = client.Execute(request);
-            var stream = response.Content;
-
-            IUserFollow result = JsonConvert.DeserializeObject<UserFollow>(stream);
-            return Ok(new DefaultResponse<object> { Status = 200, Data = result.data, Message = $"Congratulations! Now you are following {username}." });
+            var response = await Users.Follow(username);
+            return response;
         }
     }
 }

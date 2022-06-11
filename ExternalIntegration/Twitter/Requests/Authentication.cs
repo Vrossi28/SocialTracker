@@ -13,7 +13,7 @@ using OAuth;
 
 namespace ExternalIntegration.Twitter
 {
-    public class TwitterIntegration
+    public class Authentication
     {
         private static readonly string BEARER = "AAAAAAAAAAAAAAAAAAAAALDHdQEAAAAAe6daC47bJsdM4MwYgLDIm8lomNo%3DKgmYYm6C4ZQLACC966jvvHRCwwY92W8700p3aKtDX1qZKYjJLf";
         private static readonly string CONSUMER_KEY = "NkdJ6PiEF0864EwouJTg1Wgdp";
