@@ -1,4 +1,5 @@
-﻿using ExternalIntegration.Twitter;
+﻿using Analytics.Responses;
+using ExternalIntegration.Twitter;
 using ExternalIntegration.Twitter.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,12 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http.Description;
+using System.Web.Http.Results;
 using TweetSharp;
 
 namespace Analytics.Controllers.Twitter
@@ -72,10 +75,14 @@ namespace Analytics.Controllers.Twitter
         [HttpPost]
         [Route("{username}/Follow")]
         // POST: Follow
-        public async Task<UserFollowData> Follow(string username)
+        public async Task<IActionResult> Follow(string username)
         {
-            var userData = GetBaseDataByUsername(username);
-            var idUser = userData.Result.id;
+            var userData = await GetBaseDataByUsername(username);
+            if(userData == null)
+            {
+                return NotFound(new DefaultResponse<object> { Status = 404, Data = null, Message = $"User: {username} was not found!" });
+            }
+            var idUser = userData.id;
             var request = TwitterIntegration.OAuthAuthenticationFollow();
             var body = @"{" + "\n" +
             @$"    ""target_user_id"": ""{idUser}""" + "\n" +
@@ -85,7 +92,7 @@ namespace Analytics.Controllers.Twitter
             var stream = response.Content;
 
             IUserFollow result = JsonConvert.DeserializeObject<UserFollow>(stream);
-            return result.data;
+            return Ok(new DefaultResponse<object> { Status = 200, Data = result.data, Message = $"Congratulations! Now you are following {username}." });
         }
     }
 }
