@@ -16,6 +16,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http.Description;
 using System.Web.Http.Results;
+using Tweetinvi.Models;
 using TweetSharp;
 
 namespace Analytics.Controllers.Twitter
@@ -54,9 +55,18 @@ namespace Analytics.Controllers.Twitter
         [HttpPost]
         [Route("{username}/Follow")]
         // POST: Follow
-        public async Task<DefaultResponse<IUserFollow>> Follow(string username)
+        public async Task<DefaultResponse<IUser>> Follow(string username)
         {
             var response = await Users.Follow(username);
+            return response;
+        }
+
+        [HttpDelete]
+        [Route("{username}/Unfollow")]
+        // DELETE: Unfollow
+        public async Task<DefaultResponse<IUserFollow>> Unfollow(string username)
+        {
+            var response = await Users.Unfollow(username);
             return response;
         }
     }

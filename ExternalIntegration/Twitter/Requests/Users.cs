@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RestSharp;
 using System.Net;
+using Tweetinvi.Models;
 
 namespace ExternalIntegration.Twitter.Requests
 {
@@ -22,6 +23,10 @@ namespace ExternalIntegration.Twitter.Requests
         {
             HttpClient httpClient = _twitterIntegration.BearerAuthentication();
             var response = await httpClient.GetAsync($"users/by/username/{username}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = null, Message = $"An error ocurred: {response.ReasonPhrase}" };
+            }
             var stream = await response.Content.ReadAsStringAsync();
 
             IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
@@ -32,7 +37,7 @@ namespace ExternalIntegration.Twitter.Requests
             }
             else
             {
-                return new DefaultResponse<IUserBasicInformations> { Status = 200, Data = result, Message = "OK" };
+                return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = result, Message = "OK" };
             }
         }
 
@@ -52,28 +57,34 @@ namespace ExternalIntegration.Twitter.Requests
             }
             else
             {
-                return new DefaultResponse<IUserAllInformations> { Status = 200, Data = result, Message = "OK" };
+                return new DefaultResponse<IUserAllInformations> { Status = response.StatusCode, Data = result, Message = "OK" };
             }
         }
 
-        public static async Task<DefaultResponse<IUserFollow>> Follow(string username)
+        public static async Task<DefaultResponse<IUser>> Follow(string username)
         {
-            var userData = await GetBaseDataByUsername(username);
-            if (userData.Data == null)
-            {
-                return new DefaultResponse<IUserFollow> { Status = 404, Data = null, Message = $"User: {username} was not found!" };
-            }
-            var idUser = userData.Data.data.id;
-            var request = Authentication.OAuthAuthenticationFollow();
-            var body = @"{" + "\n" +
-            @$"    ""target_user_id"": ""{idUser}""" + "\n" +
-            @"}";
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
-            RestResponse response = client.Execute(request);
-            var stream = response.Content;
+            var userData = Authentication.OAuthAuthenticationUsers();
+            var response = await userData.FollowUserAsync(username);
 
-            IUserFollow result = JsonConvert.DeserializeObject<UserFollow>(stream);
-            return new DefaultResponse<IUserFollow> { Status = 200, Data = result, Message = $"Congratulations! Now you are following {username}." };
+            if (response == null)
+            {
+                return new DefaultResponse<IUser> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
+            }
+
+            return new DefaultResponse<IUser> { Status = HttpStatusCode.OK, Data = null, Message = $"Congratulations! You followed {response.ScreenName}!" };
+        }
+
+        public static async Task<DefaultResponse<IUserFollow>> Unfollow(string username)
+        {
+            var userData = Authentication.OAuthAuthenticationUsers();
+            var response = await userData.UnfollowUserAsync(username);
+
+            if (response == null)
+            {
+                return new DefaultResponse<IUserFollow> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
+            }
+            
+            return new DefaultResponse<IUserFollow> { Status = HttpStatusCode.OK, Data = null, Message = $"You unfollowed {response.ScreenName}!" };
         }
     }
 }
