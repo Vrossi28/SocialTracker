@@ -17,8 +17,6 @@ namespace ExternalIntegration.Twitter.Requests
     public static class Users
     {
         private static Authentication _twitterIntegration = new Authentication();
-        //private TwitterService twitterService = new TwitterService();
-        private static RestClient client = new RestClient("https://api.twitter.com/2/");
         public static async Task<DefaultResponse<IUserBasicInformations>> GetBaseDataByUsername(string username)
         {
             HttpClient httpClient = _twitterIntegration.BearerAuthentication();

@@ -36,7 +36,9 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<List<ITweetsBasicInformations>>> GetTweetsFromUserByUsername(string username)
         {
-            var idUser = Users.GetBaseDataByUsername(username).Result.Data.data.id;
+            var user = await Users.GetBaseDataByUsername(username);
+
+            var idUser = user.Data.data.id;
 
             RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets", "https://api.twitter.com/2/", 
                 $"users/{idUser}/tweets", "GET", Method.Get);
