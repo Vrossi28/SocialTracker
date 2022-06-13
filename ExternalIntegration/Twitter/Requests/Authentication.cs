@@ -32,7 +32,7 @@ namespace ExternalIntegration.Twitter
             return httpClient;
         }
 
-        public static TwitterClient OAuthAuthentication()
+        public static TwitterClient OAuthTweetInvi()
         {
             TwitterClient twitterClient = new TwitterClient(
                 Credentials.ConsumerKey,
@@ -41,6 +41,23 @@ namespace ExternalIntegration.Twitter
                 Credentials.AccessTokenSecret
                 );
             return twitterClient;
+        }
+
+        public static RestResponse OAuthAuthentication(string urlAuthentication, string urlBase, string urlRequest, string method, Method methodEnum)
+        {
+            OAuthRequest oAclient = OAuthRequest.ForProtectedResource(method, Credentials.ConsumerKey, Credentials.ConsumerKeySecret, Credentials.AccessToken, Credentials.AccessTokenSecret);
+            oAclient.RequestUrl = urlAuthentication;
+            string auth = oAclient.GetAuthorizationHeader();
+            
+            var client = new RestClient(urlBase);
+            var request = new RestRequest(urlRequest, methodEnum);
+            request.AddHeader("Authorization", auth);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Cookie", "guest_id=v1%3A164647635225822612");
+
+            RestResponse response = client.Execute(request);
+
+            return response;
         }
         #region Samples OAuth without TweetInvi
         /*

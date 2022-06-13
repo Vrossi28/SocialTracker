@@ -69,7 +69,7 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<IUser>> Follow(string username)
         {
-            var auth = Authentication.OAuthAuthentication();
+            var auth = Authentication.OAuthTweetInvi();
             var response = await auth.Users.FollowUserAsync(username);
 
             if (response == null)
@@ -82,7 +82,7 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<IUserFollow>> Unfollow(string username)
         {
-            var auth = Authentication.OAuthAuthentication();
+            var auth = Authentication.OAuthTweetInvi();
             var response = await auth.Users.UnfollowUserAsync(username);
 
             if (response == null)

@@ -14,7 +14,7 @@ namespace ExternalIntegration.Twitter.Requests
     {
         public static async Task<DefaultResponse<ITweetsAllData>> GetSingleTweetById(long id)
         {
-            var auth = Authentication.OAuthAuthentication();
+            var auth = Authentication.OAuthTweetInvi();
             var response = await auth.Tweets.GetTweetAsync(id);
 
             if(response == null)
@@ -38,17 +38,8 @@ namespace ExternalIntegration.Twitter.Requests
         {
             var idUser = Users.GetBaseDataByUsername(username).Result.Data.data.id;
 
-            OAuthRequest oAclient = OAuthRequest.ForProtectedResource("GET", Credentials.ConsumerKey, Credentials.ConsumerKeySecret, Credentials.AccessToken, Credentials.AccessTokenSecret);
-            oAclient.RequestUrl = $"https://api.twitter.com/2/users/{idUser}/tweets";
-            string auth = oAclient.GetAuthorizationHeader();
-
-            var client = new RestClient("https://api.twitter.com/2/");
-            var request = new RestRequest($"users/{idUser}/tweets", Method.Get);
-            request.AddHeader("Authorization", auth);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Cookie", "guest_id=v1%3A164647635225822612");
-
-            RestResponse response = client.Execute(request);
+            RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets", "https://api.twitter.com/2/", 
+                $"users/{idUser}/tweets", "GET", Method.Get);
 
             var stream = response.Content;
 
@@ -70,15 +61,8 @@ namespace ExternalIntegration.Twitter.Requests
 
             while (result.meta.next_token != null)
             {
-                oAclient.RequestUrl = $"https://api.twitter.com/2/users/{idUser}/tweets?pagination_token={result.meta.next_token}";
-                auth = oAclient.GetAuthorizationHeader();
-
-                var request2 = new RestRequest($"users/{idUser}/tweets?pagination_token={result.meta.next_token}", Method.Get);
-                request2.AddHeader("Authorization", auth);
-                request2.AddHeader("Content-Type", "application/json");
-                request2.AddHeader("Cookie", "guest_id=v1%3A164647635225822612");
-
-                response = client.Execute(request2);
+                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets?pagination_token={result.meta.next_token}", "https://api.twitter.com/2/",
+                $"users/{idUser}/tweets?pagination_token={result.meta.next_token}", "GET", Method.Get);
 
                 stream = response.Content;
 
@@ -99,7 +83,7 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<ITweetsAllData>> CreateTweet(string status)
         {
-            var auth = Authentication.OAuthAuthentication();
+            var auth = Authentication.OAuthTweetInvi();
             var response = await auth.Tweets.PublishTweetAsync(status);
 
             if (response.Text == null)
@@ -109,10 +93,10 @@ namespace ExternalIntegration.Twitter.Requests
 
             var user = await auth.Users.GetAuthenticatedUserAsync();
 
-            string[] vect = response.Url.Split('/');
+            string[] idTweet = response.Url.Split('/');
 
             ITweetsAllData tweet = new TweetsData();
-            tweet.Id = vect[5];
+            tweet.Id = idTweet[5];
             tweet.Text = response.Text;
             tweet.Url = response.Url;
             tweet.Author = user.ScreenName;
