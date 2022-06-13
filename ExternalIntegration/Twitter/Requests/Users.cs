@@ -25,7 +25,7 @@ namespace ExternalIntegration.Twitter.Requests
             var response = await httpClient.GetAsync($"users/by/username/{username}");
             if (!response.IsSuccessStatusCode)
             {
-                return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = null, Message = $"An error ocurred: {response.ReasonPhrase}" };
+                return new DefaultResponse<IUserBasicInformations> { Status = 404, Data = null, Message = $"User: {username} was not found!" };
             }
             var stream = await response.Content.ReadAsStringAsync();
 

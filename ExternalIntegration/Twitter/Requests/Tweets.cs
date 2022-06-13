@@ -15,21 +15,21 @@ namespace ExternalIntegration.Twitter.Requests
         public static async Task<DefaultResponse<ITweetsAllData>> GetSingleTweetById(long id)
         {
             var auth = Authentication.OAuthAuthentication();
-            var response = auth.Tweets.GetTweetAsync(id);
+            var response = await auth.Tweets.GetTweetAsync(id);
 
             if(response == null)
             {
                 return new DefaultResponse<ITweetsAllData> { Status = 404, Data = null, Message = $"Tweet id {id.ToString()} not found!" };
             }
 
-            var responseAuthor = await auth.UsersV2.GetUserByIdAsync(response.Result.CreatedBy.Id);
+            var responseAuthor = await auth.UsersV2.GetUserByIdAsync(response.CreatedBy.Id);
 
-            TweetsData tweet = new TweetsData();
-            tweet.Id = response.Result.Id;
-            tweet.Text = response.Result.Text;
+            ITweetsAllData tweet = new TweetsData();
+            tweet.Id = id.ToString();
+            tweet.Text = response.Text;
             tweet.Author = responseAuthor.User.Username;
-            tweet.CreatedAt = response.Result.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss");
-            tweet.Url = response.Result.Url;
+            tweet.CreatedAt = response.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss");
+            tweet.Url = response.Url;
 
             return new DefaultResponse<ITweetsAllData> { Status = HttpStatusCode.OK, Data = tweet, Message = "OK" };
         }
@@ -97,26 +97,28 @@ namespace ExternalIntegration.Twitter.Requests
             return new DefaultResponse<List<ITweetsBasicInformations>> { Status = HttpStatusCode.OK, Data = allTweets, Message = $"OK" };
         }
 
-        public static async Task<DefaultResponse<ITweetsData>> CreateTweet(string status)
+        public static async Task<DefaultResponse<ITweetsAllData>> CreateTweet(string status)
         {
             var auth = Authentication.OAuthAuthentication();
             var response = await auth.Tweets.PublishTweetAsync(status);
 
             if (response.Text == null)
             {
-                return new DefaultResponse<ITweetsData> { Status = 400, Data = null, Message = $"An error ocurred!" };
+                return new DefaultResponse<ITweetsAllData> { Status = 400, Data = null, Message = $"An error ocurred!" };
             }
 
             var user = await auth.Users.GetAuthenticatedUserAsync();
 
-            TweetsData tweet = new TweetsData();
-            tweet.Id = response.Id;
+            string[] vect = response.Url.Split('/');
+
+            ITweetsAllData tweet = new TweetsData();
+            tweet.Id = vect[5];
             tweet.Text = response.Text;
             tweet.Url = response.Url;
             tweet.Author = user.ScreenName;
             tweet.CreatedAt = response.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss");
 
-            return new DefaultResponse<ITweetsData> { Status = HttpStatusCode.OK, Data = tweet, Message = $"Your tweet has been published!" };
+            return new DefaultResponse<ITweetsAllData> { Status = HttpStatusCode.OK, Data = tweet, Message = $"Your tweet has been published!" };
         }
     }
 }

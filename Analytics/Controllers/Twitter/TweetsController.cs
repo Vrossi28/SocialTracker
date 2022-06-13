@@ -31,7 +31,7 @@ namespace Analytics.Controllers.Twitter
         [HttpPost]
         [Route("CreateTweet")]
         // POST: CreateTweet
-        public async Task<DefaultResponse<ITweetsData>> CreateTweet(string status)
+        public async Task<DefaultResponse<ITweetsAllData>> CreateTweet(string status)
         {
             var response = await Tweets.CreateTweet(status);
             return response;
