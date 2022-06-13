@@ -2,7 +2,7 @@
 {
     public interface IUserBaseData
     {
-        string id { get; set; }
+        long id { get; set; }
         string name { get; set; }
         string username { get; set; }
     }

@@ -32,7 +32,7 @@ namespace ExternalIntegration.Twitter
             return httpClient;
         }
 
-        public static IUsersClient OAuthAuthenticationUsers()
+        public static TwitterClient OAuthAuthentication()
         {
             TwitterClient twitterClient = new TwitterClient(
                 Credentials.ConsumerKey,
@@ -40,9 +40,10 @@ namespace ExternalIntegration.Twitter
                 Credentials.AccessToken,
                 Credentials.AccessTokenSecret
                 );
-            return twitterClient.Users;
+            return twitterClient;
         }
         #region Samples OAuth without TweetInvi
+        /*
         public static RestRequest OAuthAuthenticationFollow()
         {
             OAuthRequest oAclient = OAuthRequest.ForProtectedResource("POST", Credentials.ConsumerKey, Credentials.ConsumerKeySecret, Credentials.AccessToken, Credentials.AccessTokenSecret);
@@ -69,7 +70,7 @@ namespace ExternalIntegration.Twitter
             request.AddHeader("Cookie", "guest_id=v1%3A164647635225822612");
 
             return request; 
-        }
+        }*/
         #endregion
     }
 }

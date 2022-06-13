@@ -47,6 +47,12 @@ namespace ExternalIntegration.Twitter.Requests
             var response = await httpClient
                 .GetAsync($"users/by/username/{username}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
                 $"%2Clocation%2Cdescription%2Centities%2Curl");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new DefaultResponse<IUserAllInformations> { Status = response.StatusCode, Data = null, Message = $"An error ocurred: {response.ReasonPhrase}" };
+            }
+
             var stream = await response.Content.ReadAsStringAsync();
 
             IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
@@ -63,8 +69,8 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<IUser>> Follow(string username)
         {
-            var userData = Authentication.OAuthAuthenticationUsers();
-            var response = await userData.FollowUserAsync(username);
+            var auth = Authentication.OAuthAuthentication();
+            var response = await auth.Users.FollowUserAsync(username);
 
             if (response == null)
             {
@@ -76,8 +82,8 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<IUserFollow>> Unfollow(string username)
         {
-            var userData = Authentication.OAuthAuthenticationUsers();
-            var response = await userData.UnfollowUserAsync(username);
+            var auth = Authentication.OAuthAuthentication();
+            var response = await auth.Users.UnfollowUserAsync(username);
 
             if (response == null)
             {

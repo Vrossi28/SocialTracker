@@ -30,7 +30,7 @@ namespace Analytics
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Analytics", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialTracker by Vrossi", Version = "v1" });
             });
             services.AddOptions();
         }
@@ -42,7 +42,7 @@ namespace Analytics
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Analytics v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialTracker by Vrossi"));
             }
 
             app.UseHttpsRedirection();

@@ -8,7 +8,7 @@ namespace ExternalIntegration.Twitter.Models
 {
     public class UserAllData : IUserBaseData, IUserAllData
     {
-        public string id { get; set; }
+        public long id { get; set; }
         public string name { get; set; }
         public string username { get; set; }
         public UserPublicMetrics public_metrics { get; set; }
