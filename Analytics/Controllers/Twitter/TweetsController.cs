@@ -4,6 +4,7 @@ using ExternalIntegration.Twitter.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Analytics.Controllers.Twitter
 {
@@ -11,14 +12,15 @@ namespace Analytics.Controllers.Twitter
     [Route("[controller]")]
     public class TweetsController : Controller
     {
-    /// <summary>
-    /// Get single tweet by id
-    /// </summary>
-    /// <param name="id">Tweet ID</param>
-    /// <response code="200">Returns the requested tweet ID</response>
-    /// <response code="404">Tweet ID requested was not found</response>
-    [HttpGet]
+        /// <summary>
+        /// Get single tweet by id
+        /// </summary>
+        /// <param name="id">Tweet ID</param>
+        /// <response code="200">Returns the requested tweet ID</response>
+        /// <response code="404">Tweet ID requested was not found</response>
+        [HttpGet]
         [Route("SingleTweet/{id}")]
+        [Produces("application/json")]
         public async Task<DefaultResponse<ITweetsAllData>> GetSingleTweetById(long id)
         {
             var response = await Tweets.GetSingleTweetById(id);
@@ -33,6 +35,7 @@ namespace Analytics.Controllers.Twitter
         /// <response code="404">Username requested was not found</response>
         [HttpGet]
         [Route("TweetsFromUser/{username}")]
+        [Produces("application/json")]
         public async Task<DefaultResponse<List<ITweetsBasicInformations>>> GetTweetsFromUserById(string username)
         {
             var response = await Tweets.GetTweetsFromUserByUsername(username);
@@ -47,8 +50,9 @@ namespace Analytics.Controllers.Twitter
         /// <response code="401">Not authorized to create a tweet</response>
         [HttpPost]
         [Route("CreateTweet")]
+        [Produces("application/json")]
         // POST: CreateTweet
-        public async Task<DefaultResponse<ITweetsAllData>> CreateTweet(string status)
+        public async Task<DefaultResponse<ITweetsAllData>> CreateTweet([Required] string status)
         {
             var response = await Tweets.CreateTweet(status);
             return response;

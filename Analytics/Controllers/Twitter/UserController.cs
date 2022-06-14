@@ -29,6 +29,7 @@ namespace Analytics.Controllers.Twitter
         /// <response code="404">Username requested was not found</response>
         [HttpGet]
         [Route("{username}/BaseData")]
+        [Produces("application/json")]
         // GET: BaseData
         public async Task<DefaultResponse<IUserBasicInformations>> GetBaseDataByUsername(string username)
         {
@@ -44,6 +45,7 @@ namespace Analytics.Controllers.Twitter
         /// <response code="404">Username requested was not found</response>
         [HttpGet]
         [Route("{username}/AllData")]
+        [Produces("application/json")]
         // GET: AllInformations
         public async Task<DefaultResponse<IUserAllInformations>> GetAllDataByUsername(string username)
         {
@@ -59,6 +61,7 @@ namespace Analytics.Controllers.Twitter
         /// <response code="404">Username requested was not found</response>
         [HttpPost]
         [Route("{username}/Follow")]
+        [Produces("application/json")]
         // POST: Follow
         public async Task<DefaultResponse<IUser>> Follow(string username)
         {
@@ -74,6 +77,7 @@ namespace Analytics.Controllers.Twitter
         /// <response code="404">Username requested was not found</response>
         [HttpDelete]
         [Route("{username}/Unfollow")]
+        [Produces("application/json")]
         // DELETE: Unfollow
         public async Task<DefaultResponse<IUserFollow>> Unfollow(string username)
         {
