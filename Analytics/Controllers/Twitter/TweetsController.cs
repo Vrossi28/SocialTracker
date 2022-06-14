@@ -1,19 +1,18 @@
 ﻿using ExternalIntegration.Twitter.Interfaces.Tweets;
-using ExternalIntegration.Twitter.Models.Tweets;
 using ExternalIntegration.Twitter.Requests;
 using ExternalIntegration.Twitter.Responses;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Analytics.Controllers.Twitter
 {
+    [ApiController]
+    [Route("[controller]")]
     public class TweetsController : Controller
     {
         [HttpGet]
-        [Route("Tweets/SingleTweet/{id}")]
+        [Route("SingleTweet/{id}")]
         public async Task<DefaultResponse<ITweetsAllData>> GetSingleTweetById(long id)
         {
             var response = await Tweets.GetSingleTweetById(id);
@@ -21,7 +20,7 @@ namespace Analytics.Controllers.Twitter
         }
 
         [HttpGet]
-        [Route("Tweets/TweetsFromUser/{username}")]
+        [Route("TweetsFromUser/{username}")]
         public async Task<DefaultResponse<List<ITweetsBasicInformations>>> GetTweetsFromUserById(string username)
         {
             var response = await Tweets.GetTweetsFromUserByUsername(username);

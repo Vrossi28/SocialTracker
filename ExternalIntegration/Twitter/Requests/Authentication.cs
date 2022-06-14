@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http.Headers;
-using System.Configuration;
-using System.Collections.Specialized;
-using TweetSharp;
 using RestSharp;
 using OAuth;
 using Tweetinvi;
 using ExternalIntegration.Twitter.Requests;
-using Tweetinvi.Client;
 
 namespace ExternalIntegration.Twitter
 {

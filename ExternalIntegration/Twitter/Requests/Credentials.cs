@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExternalIntegration.Twitter.Requests
+﻿namespace ExternalIntegration.Twitter.Requests
 {
     public static class Credentials
     {

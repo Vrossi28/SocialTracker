@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using ExternalIntegration.Twitter.Models;
 using ExternalIntegration.Twitter.Responses;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using RestSharp;
 using System.Net;
 using Tweetinvi.Models;
 

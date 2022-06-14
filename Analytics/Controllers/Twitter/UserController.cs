@@ -1,29 +1,16 @@
-﻿using ExternalIntegration.Twitter;
-using ExternalIntegration.Twitter.Models;
+﻿using ExternalIntegration.Twitter.Models;
 using ExternalIntegration.Twitter.Requests;
 using ExternalIntegration.Twitter.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web.Http.Description;
-using System.Web.Http.Results;
 using Tweetinvi.Models;
-using TweetSharp;
 
 namespace Analytics.Controllers.Twitter
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
 
         private readonly IConfiguration _configuration;

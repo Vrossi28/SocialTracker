@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ExternalIntegration.Twitter.Models
+﻿namespace ExternalIntegration.Twitter.Models
 {
     public interface IUserAllInformations
     {

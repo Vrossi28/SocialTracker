@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ExternalIntegration.Twitter.Models
+﻿namespace ExternalIntegration.Twitter.Models
 {
     public class UserBaseData : IUserBaseData
     {
