@@ -26,7 +26,6 @@ namespace Analytics.Controllers.Twitter
         public async Task<DefaultResponse<IUserBasicInformations>> GetBaseDataByUsername(string username)
         {
             var response = await Users.GetBaseDataByUsername(username);
-
             return response;
         }
 

@@ -2,6 +2,7 @@
 using ExternalIntegration.Twitter.Models.Tweets;
 using ExternalIntegration.Twitter.Responses;
 using Newtonsoft.Json;
+using OAuth;
 using RestSharp;
 using System.Collections.Generic;
 using System.Net;

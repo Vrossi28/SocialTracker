@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Analytics
 {
@@ -24,6 +27,8 @@ namespace Analytics
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialTracker by Vrossi", Version = "v1" });
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
             services.AddOptions();
         }
@@ -35,7 +40,11 @@ namespace Analytics
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialTracker by Vrossi"));
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialTracker by Vrossi");
+                    c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
+                    c.ConfigObject.AdditionalItems.Add("swaggerUIFoo", "bar");
+                });
             }
 
             app.UseHttpsRedirection();

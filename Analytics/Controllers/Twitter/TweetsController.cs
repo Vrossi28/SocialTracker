@@ -11,6 +11,11 @@ namespace Analytics.Controllers.Twitter
     [Route("[controller]")]
     public class TweetsController : Controller
     {
+        /// <summary>
+        /// Get single tweet by id
+        /// </summary>
+        /// <param name="id">Tweet ID</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("SingleTweet/{id}")]
         public async Task<DefaultResponse<ITweetsAllData>> GetSingleTweetById(long id)
