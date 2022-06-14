@@ -20,6 +20,13 @@ namespace Analytics.Controllers.Twitter
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Get basic informations from user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <returns></returns>
+        /// <response code="200">Success</response>
+        /// <response code="404">Username requested was not found</response>
         [HttpGet]
         [Route("{username}/BaseData")]
         // GET: BaseData
@@ -29,6 +36,12 @@ namespace Analytics.Controllers.Twitter
             return response;
         }
 
+        /// <summary>
+        /// Get all informations from user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Success</response>
+        /// <response code="404">Username requested was not found</response>
         [HttpGet]
         [Route("{username}/AllData")]
         // GET: AllInformations
@@ -38,6 +51,12 @@ namespace Analytics.Controllers.Twitter
             return response;
         }
 
+        /// <summary>
+        /// Follow user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Successfully following the requested username</response>
+        /// <response code="404">Username requested was not found</response>
         [HttpPost]
         [Route("{username}/Follow")]
         // POST: Follow
@@ -47,6 +66,12 @@ namespace Analytics.Controllers.Twitter
             return response;
         }
 
+        /// <summary>
+        /// Unfollow user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Successfully unfollowed</response>
+        /// <response code="404">Username requested was not found</response>
         [HttpDelete]
         [Route("{username}/Unfollow")]
         // DELETE: Unfollow

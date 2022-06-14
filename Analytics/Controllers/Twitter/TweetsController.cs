@@ -11,12 +11,13 @@ namespace Analytics.Controllers.Twitter
     [Route("[controller]")]
     public class TweetsController : Controller
     {
-        /// <summary>
-        /// Get single tweet by id
-        /// </summary>
-        /// <param name="id">Tweet ID</param>
-        /// <returns></returns>
-        [HttpGet]
+    /// <summary>
+    /// Get single tweet by id
+    /// </summary>
+    /// <param name="id">Tweet ID</param>
+    /// <response code="200">Returns the requested tweet ID</response>
+    /// <response code="404">Tweet ID requested was not found</response>
+    [HttpGet]
         [Route("SingleTweet/{id}")]
         public async Task<DefaultResponse<ITweetsAllData>> GetSingleTweetById(long id)
         {
@@ -24,6 +25,12 @@ namespace Analytics.Controllers.Twitter
             return response;
         }
 
+        /// <summary>
+        /// Get all tweets from user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Returns all tweets from requested username</response>
+        /// <response code="404">Username requested was not found</response>
         [HttpGet]
         [Route("TweetsFromUser/{username}")]
         public async Task<DefaultResponse<List<ITweetsBasicInformations>>> GetTweetsFromUserById(string username)
@@ -32,6 +39,12 @@ namespace Analytics.Controllers.Twitter
             return response;
         }
 
+        /// <summary>
+        /// Create a tweet
+        /// </summary>
+        /// <param name="status">Tweet content that should be published</param>
+        /// <response code="200">Tweet successfully created</response>
+        /// <response code="401">Not authorized to create a tweet</response>
         [HttpPost]
         [Route("CreateTweet")]
         // POST: CreateTweet
