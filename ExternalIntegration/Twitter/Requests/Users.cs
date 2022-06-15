@@ -64,12 +64,12 @@ namespace ExternalIntegration.Twitter.Requests
             }
         }
 
-        public static async Task<DefaultResponse<List<IUserFollowable>>> GetFollowersByUsername(string username)
+        public static async Task<DefaultResponse<IUserFollowable>> GetFollowersByUsername(string username)
         {
             var user = await GetBaseDataByUsername(username);
             if (user.Message != "OK")
             {
-                return new DefaultResponse<List<IUserFollowable>> { Status = user.Status, Data = null, Message = $"{user.Message}" };
+                return new DefaultResponse<IUserFollowable> { Status = user.Status, Data = null, Message = $"{user.Message}" };
             }
 
             long idUser = user.Data.data.id;
@@ -80,12 +80,18 @@ namespace ExternalIntegration.Twitter.Requests
 
             IUserFollowable result = JsonConvert.DeserializeObject<UserFollowable>(stream);
 
-            List<IUserFollowable> allFollowers = new List<IUserFollowable>();
-            allFollowers.Add(result);
+            IUserFollowable allFollowers = new UserFollowable();
+            allFollowers.data = result.data;
+            int countFollowers = 100;
+
+            if (result.meta == null)
+            {
+                return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.BadRequest, Data = null, Message = $"Error" };
+            }
 
             if (result.meta.next_token == null)
             {
-                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
+                return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
             }
 
             while (result.meta.next_token != null)
@@ -99,47 +105,54 @@ namespace ExternalIntegration.Twitter.Requests
 
                 if (result.data != null)
                 {
-                    allFollowers.Add(result);
+                    allFollowers.meta = result.meta;
+                    countFollowers += result.meta.result_count;
+                    foreach (var item in result.data)
+                    {
+                        allFollowers.meta.result_count = countFollowers;
+                        allFollowers.data.Add(item);
+                    }
                 }
                 else
                 {
-                    return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
+                    return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
                 }
             }
 
-            return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
+            return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
         }
 
-        public static async Task<DefaultResponse<List<IUserFollowable>>> GetFollowingByUsername(string username)
+        public static async Task<DefaultResponse<IUserFollowable>> GetFollowingByUsername(string username)
         {
             var user = await GetBaseDataByUsername(username);
             if (user.Message != "OK")
             {
-                return new DefaultResponse<List<IUserFollowable>> { Status = user.Status, Data = null, Message = $"{user.Message}" };
+                return new DefaultResponse<IUserFollowable> { Status = user.Status, Data = null, Message = $"{user.Message}" };
             }
             var idUser = user.Data.data.id;
             var response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following", "https://api.twitter.com/2/", $"users/{idUser}/following", "GET", Method.Get);
 
             if (!response.StatusDescription.Equals("OK"))
             {
-                return new DefaultResponse<List<IUserFollowable>> { Status = response.StatusCode, Data = null, Message = $"Error: {response.StatusDescription}" };
+                return new DefaultResponse<IUserFollowable> { Status = response.StatusCode, Data = null, Message = $"Error: {response.StatusDescription}" };
             }
 
             var stream = response.Content;
 
             IUserFollowable result = JsonConvert.DeserializeObject<UserFollowable>(stream);
 
-            List<IUserFollowable> allFollowing = new List<IUserFollowable>();
-            allFollowing.Add(result);
+            IUserFollowable allFollowing = new UserFollowable();
+            allFollowing.data = result.data;
+            int countFollowing = 100;
 
             if (result.data == null)
             {
-                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
+                return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
             }
 
             if (result.meta.next_token == null)
             {
-                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
+                return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
             }
 
             while (result.meta.next_token != null)
@@ -153,15 +166,21 @@ namespace ExternalIntegration.Twitter.Requests
 
                 if (result.data != null)
                 {
-                    allFollowing.Add(result);
+                    allFollowing.meta = result.meta;
+                    countFollowing += result.meta.result_count;
+                    foreach (var item in result.data)
+                    {
+                        allFollowing.meta.result_count = countFollowing;
+                        allFollowing.data.Add(item);
+                    }
                 }
                 else
                 {
-                    return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
+                    return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
                 }
             }
 
-            return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
+            return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
         }
 
         public static async Task<DefaultResponse<IUser>> Follow(string username)

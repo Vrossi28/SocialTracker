@@ -66,7 +66,7 @@ namespace Analytics.Controllers.Twitter
         [Route("{username}/Followers")]
         [Produces("application/json")]
         // GET: Followers
-        public async Task<DefaultResponse<List<IUserFollowable>>> GetFollowersByUsername(string username)
+        public async Task<DefaultResponse<IUserFollowable>> GetFollowersByUsername(string username)
         {
             var response = await Users.GetFollowersByUsername(username);
             return response;
@@ -82,7 +82,7 @@ namespace Analytics.Controllers.Twitter
         [Route("{username}/Following")]
         [Produces("application/json")]
         // GET: Followers
-        public async Task<DefaultResponse<List<IUserFollowable>>> GetFollowingByUsername(string username)
+        public async Task<DefaultResponse<IUserFollowable>> GetFollowingByUsername(string username)
         {
             var response = await Users.GetFollowingByUsername(username);
             return response;
