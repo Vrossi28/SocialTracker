@@ -30,7 +30,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             if (result.data == null)
             {
-                return new DefaultResponse<IUserBasicInformations> { Status = 404, Data = null, Message = $"User: {username} was not found!" };
+                return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
             }
             else
             {
@@ -56,7 +56,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             if (result.data == null)
             {
-                return new DefaultResponse<IUserAllInformations> { Status = 404, Data = null, Message = $"User: {username} was not found!" };
+                return new DefaultResponse<IUserAllInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
             }
             else
             {
@@ -86,7 +86,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             if (result.meta == null)
             {
-                return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.BadRequest, Data = null, Message = $"Error" };
+                return new DefaultResponse<IUserFollowable> { Status = response.StatusCode, Data = null, Message = $"Error {response.ErrorException}" };
             }
 
             if (result.meta.next_token == null)
@@ -134,7 +134,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             if (!response.StatusDescription.Equals("OK"))
             {
-                return new DefaultResponse<IUserFollowable> { Status = response.StatusCode, Data = null, Message = $"Error: {response.StatusDescription}" };
+                return new DefaultResponse<IUserFollowable> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ErrorException}" };
             }
 
             var stream = response.Content;
