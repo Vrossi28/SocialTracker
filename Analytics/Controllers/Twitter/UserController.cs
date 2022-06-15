@@ -1,9 +1,12 @@
-﻿using ExternalIntegration.Twitter.Models;
+﻿using ExternalIntegration.Twitter.Interfaces.User;
+using ExternalIntegration.Twitter.Models;
 using ExternalIntegration.Twitter.Requests;
 using ExternalIntegration.Twitter.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Tweetinvi.Iterators;
 using Tweetinvi.Models;
 
 namespace Analytics.Controllers.Twitter
@@ -50,6 +53,38 @@ namespace Analytics.Controllers.Twitter
         public async Task<DefaultResponse<IUserAllInformations>> GetAllDataByUsername(string username)
         {
             var response = await Users.GetAllDataByUsername(username);
+            return response;
+        }
+
+        /// <summary>
+        /// Get all followers from user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Success</response>
+        /// <response code="404">Username requested was not found</response>
+        [HttpGet]
+        [Route("{username}/Followers")]
+        [Produces("application/json")]
+        // GET: Followers
+        public async Task<DefaultResponse<List<IUserFollowable>>> GetFollowersByUsername(string username)
+        {
+            var response = await Users.GetFollowersByUsername(username);
+            return response;
+        }
+
+        /// <summary>
+        /// Get all following from user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Success</response>
+        /// <response code="404">Username requested was not found</response>
+        [HttpGet]
+        [Route("{username}/Following")]
+        [Produces("application/json")]
+        // GET: Followers
+        public async Task<DefaultResponse<List<IUserFollowable>>> GetFollowingByUsername(string username)
+        {
+            var response = await Users.GetFollowingByUsername(username);
             return response;
         }
 

@@ -42,8 +42,6 @@ namespace Analytics
                 app.UseSwagger();
                 app.UseSwaggerUI(c => {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialTracker by Vrossi");
-                    c.ConfigObject.AdditionalItems.Add("syntaxHighlight", false);
-                    c.ConfigObject.AdditionalItems.Add("swaggerUIFoo", "bar");
                 });
             }
 

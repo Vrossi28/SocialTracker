@@ -5,6 +5,11 @@ using ExternalIntegration.Twitter.Responses;
 using Newtonsoft.Json;
 using System.Net;
 using Tweetinvi.Models;
+using System.Collections.Generic;
+using Tweetinvi.Iterators;
+using RestSharp;
+using ExternalIntegration.Twitter.Interfaces.User;
+using ExternalIntegration.Twitter.Models.User;
 
 namespace ExternalIntegration.Twitter.Requests
 {
@@ -57,6 +62,94 @@ namespace ExternalIntegration.Twitter.Requests
             {
                 return new DefaultResponse<IUserAllInformations> { Status = response.StatusCode, Data = result, Message = "OK" };
             }
+        }
+
+        public static async Task<DefaultResponse<List<IUserFollowable>>> GetFollowersByUsername(string username)
+        {
+            var idUser = GetBaseDataByUsername(username).Result.Data.data.id;
+            var response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers", "https://api.twitter.com/2/", $"users/{idUser}/followers", "GET", Method.Get);
+
+            var stream = response.Content;
+
+            IUserFollowable result = JsonConvert.DeserializeObject<UserFollowable>(stream);
+
+            List<IUserFollowable> allFollowers = new List<IUserFollowable>();
+            allFollowers.Add(result);
+
+            if (result.data == null)
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
+            }
+
+            if (result.meta.next_token == null)
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
+            }
+
+            while (result.meta.next_token != null)
+            {
+                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers?pagination_token={result.meta.next_token}", "https://api.twitter.com/2/",
+                $"users/{idUser}/followers?pagination_token={result.meta.next_token}", "GET", Method.Get);
+
+                stream = response.Content;
+
+                result = JsonConvert.DeserializeObject<UserFollowable>(stream);
+
+                if (result.data != null)
+                {
+                    allFollowers.Add(result);
+                }
+                else
+                {
+                    return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
+                }
+            }
+
+            return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
+        }
+
+        public static async Task<DefaultResponse<List<IUserFollowable>>> GetFollowingByUsername(string username)
+        {
+            var idUser = GetBaseDataByUsername(username).Result.Data.data.id;
+            var response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following", "https://api.twitter.com/2/", $"users/{idUser}/following", "GET", Method.Get);
+
+            var stream = response.Content;
+
+            IUserFollowable result = JsonConvert.DeserializeObject<UserFollowable>(stream);
+
+            List<IUserFollowable> allFollowing = new List<IUserFollowable>();
+            allFollowing.Add(result);
+
+            if (result.data == null)
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
+            }
+
+            if (result.meta.next_token == null)
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
+            }
+
+            while (result.meta.next_token != null)
+            {
+                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following?pagination_token={result.meta.next_token}", "https://api.twitter.com/2/",
+                $"users/{idUser}/following?pagination_token={result.meta.next_token}", "GET", Method.Get);
+
+                stream = response.Content;
+
+                result = JsonConvert.DeserializeObject<UserFollowable>(stream);
+
+                if (result.data != null)
+                {
+                    allFollowing.Add(result);
+                }
+                else
+                {
+                    return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
+                }
+            }
+
+            return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
         }
 
         public static async Task<DefaultResponse<IUser>> Follow(string username)
