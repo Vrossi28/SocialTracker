@@ -37,6 +37,10 @@ namespace ExternalIntegration.Twitter.Requests
         public static async Task<DefaultResponse<List<ITweetsBasicInformations>>> GetTweetsFromUserByUsername(string username)
         {
             var user = await Users.GetBaseDataByUsername(username);
+            if (user.Message != "OK")
+            {
+                return new DefaultResponse<List<ITweetsBasicInformations>> { Status = user.Status, Data = null, Message = $"{user.Message}" };
+            }
 
             var idUser = user.Data.data.id;
 

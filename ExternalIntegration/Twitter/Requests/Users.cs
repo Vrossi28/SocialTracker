@@ -22,7 +22,7 @@ namespace ExternalIntegration.Twitter.Requests
             var response = await httpClient.GetAsync($"users/by/username/{username}");
             if (!response.IsSuccessStatusCode)
             {
-                return new DefaultResponse<IUserBasicInformations> { Status = 404, Data = null, Message = $"User: {username} was not found!" };
+                return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
             }
             var stream = await response.Content.ReadAsStringAsync();
 
@@ -66,8 +66,15 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<List<IUserFollowable>>> GetFollowersByUsername(string username)
         {
-            var idUser = GetBaseDataByUsername(username).Result.Data.data.id;
-            var response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers", "https://api.twitter.com/2/", $"users/{idUser}/followers", "GET", Method.Get);
+            var user = await GetBaseDataByUsername(username);
+            if (user.Message != "OK")
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = user.Status, Data = null, Message = $"{user.Message}" };
+            }
+
+            long idUser = user.Data.data.id;
+
+            RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers", "https://api.twitter.com/2/", $"users/{idUser}/followers", "GET", Method.Get);
 
             var stream = response.Content;
 
@@ -75,11 +82,6 @@ namespace ExternalIntegration.Twitter.Requests
 
             List<IUserFollowable> allFollowers = new List<IUserFollowable>();
             allFollowers.Add(result);
-
-            if (result.data == null)
-            {
-                return new DefaultResponse<List<IUserFollowable>> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
-            }
 
             if (result.meta.next_token == null)
             {
@@ -110,8 +112,18 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<List<IUserFollowable>>> GetFollowingByUsername(string username)
         {
-            var idUser = GetBaseDataByUsername(username).Result.Data.data.id;
+            var user = await GetBaseDataByUsername(username);
+            if (user.Message != "OK")
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = user.Status, Data = null, Message = $"{user.Message}" };
+            }
+            var idUser = user.Data.data.id;
             var response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following", "https://api.twitter.com/2/", $"users/{idUser}/following", "GET", Method.Get);
+
+            if (!response.StatusDescription.Equals("OK"))
+            {
+                return new DefaultResponse<List<IUserFollowable>> { Status = response.StatusCode, Data = null, Message = $"Error: {response.StatusDescription}" };
+            }
 
             var stream = response.Content;
 
