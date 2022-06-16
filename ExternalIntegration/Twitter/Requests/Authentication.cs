@@ -8,7 +8,7 @@ using ExternalIntegration.Twitter.Requests;
 
 namespace ExternalIntegration.Twitter
 {
-    public class Authentication
+    public static class Authentication
     {
 
         public static HttpClient BaseApi()
@@ -17,7 +17,7 @@ namespace ExternalIntegration.Twitter
             httpClient.BaseAddress = new Uri("https://api.twitter.com/2/");
             return httpClient;
         }
-        public HttpClient BearerAuthentication()
+        public static HttpClient BearerAuthentication()
         {
             HttpClient httpClient = BaseApi();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Credentials.Bearer);

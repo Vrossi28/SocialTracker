@@ -16,10 +16,9 @@ namespace ExternalIntegration.Twitter.Requests
 {
     public static class Users
     {
-        private static Authentication _twitterIntegration = new Authentication();
         public static async Task<DefaultResponse<IUserBasicInformations>> GetBaseDataByUsername(string username)
         {
-            HttpClient httpClient = _twitterIntegration.BearerAuthentication();
+            HttpClient httpClient = Authentication.BearerAuthentication();
             var response = await httpClient.GetAsync($"users/by/username/{username}");
             if (!response.IsSuccessStatusCode)
             {
@@ -41,7 +40,7 @@ namespace ExternalIntegration.Twitter.Requests
 
         public static async Task<DefaultResponse<IUserAllInformations>> GetAllDataByUsername(string username)
         {
-            HttpClient httpClient = _twitterIntegration.BearerAuthentication();
+            HttpClient httpClient = Authentication.BearerAuthentication();
             var response = await httpClient
                 .GetAsync($"users/by/username/{username}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
                 $"%2Clocation%2Cdescription%2Centities%2Curl");
