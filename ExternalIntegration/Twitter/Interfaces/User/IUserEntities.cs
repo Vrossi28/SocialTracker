@@ -2,7 +2,7 @@
 {
     public interface IUserEntities
     {
-        UserDescription description { get; set; }
-        Url url { get; set; }
+        UserDescription Description { get; set; }
+        Url Url { get; set; }
     }
 }

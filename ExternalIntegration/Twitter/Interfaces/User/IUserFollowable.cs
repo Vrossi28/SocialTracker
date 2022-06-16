@@ -6,7 +6,7 @@ namespace ExternalIntegration.Twitter.Interfaces.User
 {
     public interface IUserFollowable
     {
-        List<UserBaseData> data { get; set; }
-        Meta meta { get; set; }
+        List<UserBaseData> Data { get; set; }
+        Meta Meta { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace ExternalIntegration.Twitter.Requests
                 return new DefaultResponse<List<ITweetsBasicInformations>> { Status = user.Status, Data = null, Message = $"{user.Message}" };
             }
 
-            var idUser = user.Data.data.id;
+            var idUser = user.Data.Data.Id;
 
             RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets", "https://api.twitter.com/2/", 
                 $"users/{idUser}/tweets", "GET", Method.Get);
@@ -54,27 +54,27 @@ namespace ExternalIntegration.Twitter.Requests
             List<ITweetsBasicInformations> allTweets = new List<ITweetsBasicInformations>();
             allTweets.Add(result);
 
-            if (result.data == null)
+            if (result.Data == null)
             {
                 return new DefaultResponse<List<ITweetsBasicInformations>> { Status = 404, Data = null, Message = $"User id {idUser} not found!" };
             }
 
 
-            if(result.meta.next_token == null)
+            if(result.Meta.NextToken == null)
             {
                 return new DefaultResponse<List<ITweetsBasicInformations>> { Status = HttpStatusCode.OK, Data = allTweets, Message = $"OK" };
             }
 
-            while (result.meta.next_token != null)
+            while (result.Meta.NextToken != null)
             {
-                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets?pagination_token={result.meta.next_token}", "https://api.twitter.com/2/",
-                $"users/{idUser}/tweets?pagination_token={result.meta.next_token}", "GET", Method.Get);
+                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets?pagination_token={result.Meta.NextToken}", "https://api.twitter.com/2/",
+                $"users/{idUser}/tweets?pagination_token={result.Meta.NextToken}", "GET", Method.Get);
 
                 stream = response.Content;
 
                 result = JsonConvert.DeserializeObject<TweetsBasicInformations>(stream);
 
-                if (result.data != null)
+                if (result.Data != null)
                 {
                     allTweets.Add(result);
                 }

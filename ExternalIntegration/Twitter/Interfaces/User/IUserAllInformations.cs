@@ -2,6 +2,6 @@
 {
     public interface IUserAllInformations
     {
-        UserAllData data { get; set; }
+        UserAllData Data { get; set; }
     }
 }

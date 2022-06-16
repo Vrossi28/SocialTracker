@@ -1,7 +1,10 @@
-﻿namespace ExternalIntegration.Twitter.Models
+﻿using Newtonsoft.Json;
+
+namespace ExternalIntegration.Twitter.Models
 {
     public class UserFollow : IUserFollow
     {
-        public UserFollowData data { get; set; }
+        [JsonProperty(PropertyName = "data")]
+        public UserFollowData Data { get; set; }
     }
 }

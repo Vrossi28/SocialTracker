@@ -2,6 +2,6 @@
 {
     public interface IUserBasicInformations
     {
-        UserBaseData data { get; set; }
+        UserBaseData Data { get; set; }
     }
 }

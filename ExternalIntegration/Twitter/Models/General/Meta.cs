@@ -1,10 +1,16 @@
-﻿namespace ExternalIntegration.Twitter.Models.General
+﻿using Newtonsoft.Json;
+
+namespace ExternalIntegration.Twitter.Models.General
 {
     public class Meta
     {
-        public string next_token { get; set; }
-        public int result_count { get; set; }
-        public string newest_id { get; set; }
-        public string oldest_id { get; set; }
+        [JsonProperty(PropertyName = "next_token")]
+        public string NextToken { get; set; }
+        [JsonProperty(PropertyName = "result_count")]
+        public int ResultCount { get; set; }
+        [JsonProperty(PropertyName = "newest_id")]
+        public string NewestId { get; set; }
+        [JsonProperty(PropertyName = "oldest_id")]
+        public string OldestId { get; set; }
     }
 }

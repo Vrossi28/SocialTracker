@@ -1,11 +1,17 @@
-﻿namespace ExternalIntegration.Twitter.Models
+﻿using Newtonsoft.Json;
+
+namespace ExternalIntegration.Twitter.Models
 {
     public class UserPublicMetrics : IUserPublicMetrics
     {
-        public int followers_count { get; set; }
-        public int following_count { get; set; }
-        public int tweet_count { get; set; }
-        public int listed_count { get; set; }
+        [JsonProperty(PropertyName = "followers_count")]
+        public int FollowersCount { get; set; }
+        [JsonProperty(PropertyName = "following_count")]
+        public int FollowingCount { get; set; }
+        [JsonProperty(PropertyName = "tweet_count")]
+        public int TweetCount { get; set; }
+        [JsonProperty(PropertyName = "listed_count")]
+        public int ListedCount { get; set; }
     }
 
 }

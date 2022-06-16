@@ -29,7 +29,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
 
-            if (result.data == null)
+            if (result.Data == null)
             {
                 return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
             }
@@ -55,7 +55,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
 
-            if (result.data == null)
+            if (result.Data == null)
             {
                 return new DefaultResponse<IUserAllInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
             }
@@ -73,7 +73,7 @@ namespace ExternalIntegration.Twitter.Requests
                 return new DefaultResponse<IUserFollowable> { Status = user.Status, Data = null, Message = $"{user.Message}" };
             }
 
-            long idUser = user.Data.data.id;
+            long idUser = user.Data.Data.Id;
 
             RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers", "https://api.twitter.com/2/", $"users/{idUser}/followers", "GET", Method.Get);
 
@@ -82,36 +82,37 @@ namespace ExternalIntegration.Twitter.Requests
             IUserFollowable result = JsonConvert.DeserializeObject<UserFollowable>(stream);
 
             IUserFollowable allFollowers = new UserFollowable();
-            allFollowers.data = result.data;
+            allFollowers.Data = result.Data;
+            allFollowers.Meta = result.Meta;
             int countFollowers = 100;
 
-            if (result.meta == null)
+            if (result.Meta == null)
             {
                 return new DefaultResponse<IUserFollowable> { Status = response.StatusCode, Data = null, Message = $"Error {response.ErrorException}" };
             }
 
-            if (result.meta.next_token == null)
+            if (result.Meta.NextToken == null)
             {
                 return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowers, Message = $"OK" };
             }
 
-            while (result.meta.next_token != null)
+            while (result.Meta.NextToken != null)
             {
-                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers?pagination_token={result.meta.next_token}", "https://api.twitter.com/2/",
-                $"users/{idUser}/followers?pagination_token={result.meta.next_token}", "GET", Method.Get);
+                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/followers?pagination_token={result.Meta.NextToken}", "https://api.twitter.com/2/",
+                $"users/{idUser}/followers?pagination_token={result.Meta.NextToken}", "GET", Method.Get);
 
                 stream = response.Content;
 
                 result = JsonConvert.DeserializeObject<UserFollowable>(stream);
 
-                if (result.data != null)
+                if (result.Data != null)
                 {
-                    allFollowers.meta = result.meta;
-                    countFollowers += result.meta.result_count;
-                    foreach (var item in result.data)
+                    allFollowers.Meta = result.Meta;
+                    countFollowers += result.Meta.ResultCount;
+                    foreach (var item in result.Data)
                     {
-                        allFollowers.meta.result_count = countFollowers;
-                        allFollowers.data.Add(item);
+                        allFollowers.Meta.ResultCount = countFollowers;
+                        allFollowers.Data.Add(item);
                     }
                 }
                 else
@@ -130,7 +131,7 @@ namespace ExternalIntegration.Twitter.Requests
             {
                 return new DefaultResponse<IUserFollowable> { Status = user.Status, Data = null, Message = $"{user.Message}" };
             }
-            var idUser = user.Data.data.id;
+            var idUser = user.Data.Data.Id;
             var response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following", "https://api.twitter.com/2/", $"users/{idUser}/following", "GET", Method.Get);
 
             if (!response.StatusDescription.Equals("OK"))
@@ -143,36 +144,37 @@ namespace ExternalIntegration.Twitter.Requests
             IUserFollowable result = JsonConvert.DeserializeObject<UserFollowable>(stream);
 
             IUserFollowable allFollowing = new UserFollowable();
-            allFollowing.data = result.data;
+            allFollowing.Data = result.Data;
+            allFollowing.Meta = result.Meta;
             int countFollowing = 100;
 
-            if (result.data == null)
+            if (result.Data == null)
             {
                 return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.NotFound, Data = null, Message = $"User {username} not found!" };
             }
 
-            if (result.meta.next_token == null)
+            if (result.Meta.NextToken == null)
             {
                 return new DefaultResponse<IUserFollowable> { Status = HttpStatusCode.OK, Data = allFollowing, Message = $"OK" };
             }
 
-            while (result.meta.next_token != null)
+            while (result.Meta.NextToken != null)
             {
-                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following?pagination_token={result.meta.next_token}", "https://api.twitter.com/2/",
-                $"users/{idUser}/following?pagination_token={result.meta.next_token}", "GET", Method.Get);
+                response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/following?pagination_token={result.Meta.NextToken}", "https://api.twitter.com/2/",
+                $"users/{idUser}/following?pagination_token={result.Meta.NextToken}", "GET", Method.Get);
 
                 stream = response.Content;
 
                 result = JsonConvert.DeserializeObject<UserFollowable>(stream);
 
-                if (result.data != null)
+                if (result.Data != null)
                 {
-                    allFollowing.meta = result.meta;
-                    countFollowing += result.meta.result_count;
-                    foreach (var item in result.data)
+                    allFollowing.Meta = result.Meta;
+                    countFollowing += result.Meta.ResultCount;
+                    foreach (var item in result.Data)
                     {
-                        allFollowing.meta.result_count = countFollowing;
-                        allFollowing.data.Add(item);
+                        allFollowing.Meta.ResultCount = countFollowing;
+                        allFollowing.Data.Add(item);
                     }
                 }
                 else
@@ -213,18 +215,18 @@ namespace ExternalIntegration.Twitter.Requests
         public static async Task<DefaultResponse<List<UserBaseData>>> FollowingDontFollowBack(string username)
         {
             var followersResponse = await GetFollowersByUsername(username);
-            if (followersResponse.Data.data == null)
+            if (followersResponse.Data.Data == null)
             {
                 return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = null, Message = $"{followersResponse.Message}" };
             }
             var followingResponse = await GetFollowingByUsername(username);
 
-            if (followingResponse.Data.data == null)
+            if (followingResponse.Data.Data == null)
             {
                 return new DefaultResponse<List<UserBaseData>> { Status = followingResponse.Status, Data = null, Message = $"{followingResponse.Message}" };
             }
 
-            List<UserBaseData> followingDontFollowBack = followingResponse.Data.data.Where(i => followersResponse.Data.data.Select(x => x.id).Contains(i.id) == false).ToList();
+            List<UserBaseData> followingDontFollowBack = followingResponse.Data.Data.Where(i => followersResponse.Data.Data.Select(x => x.Id).Contains(i.Id) == false).ToList();
 
             return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followingDontFollowBack, Message = $"{followersResponse.Message}" };
         }
@@ -232,18 +234,18 @@ namespace ExternalIntegration.Twitter.Requests
         public static async Task<DefaultResponse<List<UserBaseData>>> FollowersDontFollowBack(string username)
         {
             var followersResponse = await GetFollowersByUsername(username);
-            if (followersResponse.Data.data == null)
+            if (followersResponse.Data.Data == null)
             {
                 return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = null, Message = $"{followersResponse.Message}" };
             }
             var followingResponse = await GetFollowingByUsername(username);
 
-            if (followingResponse.Data.data == null)
+            if (followingResponse.Data.Data == null)
             {
                 return new DefaultResponse<List<UserBaseData>> { Status = followingResponse.Status, Data = null, Message = $"{followingResponse.Message}" };
             }
 
-            List<UserBaseData> followersDontFollowed = followersResponse.Data.data.Where(i => followingResponse.Data.data.Select(x => x.id).Contains(i.id) == false).ToList();
+            List<UserBaseData> followersDontFollowed = followersResponse.Data.Data.Where(i => followingResponse.Data.Data.Select(x => x.Id).Contains(i.Id) == false).ToList();
 
             return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followersDontFollowed, Message = $"{followersResponse.Message}" };
         }

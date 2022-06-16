@@ -1,12 +1,19 @@
-﻿namespace ExternalIntegration.Twitter.Models
+﻿using Newtonsoft.Json;
+
+namespace ExternalIntegration.Twitter.Models
 {
     public class UrlDetails : IUrlDetails
     {
-        public int start { get; set; }
-        public int end { get; set; }
-        public string url { get; set; }
-        public string expanded_url { get; set; }
-        public string display_url { get; set; }
+        [JsonProperty(PropertyName = "start")]
+        public int Start { get; set; }
+        [JsonProperty(PropertyName = "end")]
+        public int End { get; set; }
+        [JsonProperty(PropertyName = "url")]
+        public string Url { get; set; }
+        [JsonProperty(PropertyName = "expanded_url")]
+        public string ExpandedUrl { get; set; }
+        [JsonProperty(PropertyName = "display_url")]
+        public string DisplayUrl { get; set; }
     }
 
 }

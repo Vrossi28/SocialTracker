@@ -4,6 +4,6 @@ namespace ExternalIntegration.Twitter.Models
 {
     public interface IUrl
     {
-        List<UrlDetails> urls { get; set; }
+        List<UrlDetails> Urls { get; set; }
     }
 }

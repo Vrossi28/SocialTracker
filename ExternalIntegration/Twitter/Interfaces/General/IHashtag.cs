@@ -2,8 +2,8 @@
 {
     public interface IHashtag
     {
-        int end { get; set; }
-        int start { get; set; }
-        string tag { get; set; }
+        int End { get; set; }
+        int Start { get; set; }
+        string Tag { get; set; }
     }
 }

@@ -1,21 +1,35 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace ExternalIntegration.Twitter.Models
 {
     public class UserAllData : IUserBaseData, IUserAllData
     {
-        public long id { get; set; }
-        public string name { get; set; }
-        public string username { get; set; }
-        public UserPublicMetrics public_metrics { get; set; }
-        public DateTime created_at { get; set; }
-        public string description { get; set; }
-        public bool verified { get; set; }
-        public string url { get; set; }
-        public bool @protected { get; set; }
-        public string pinned_tweet_id { get; set; }
-        public string profile_image_url { get; set; }
-        public UserEntities entities { get; set; }
-        public string location { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public long Id { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string Name { get; set; }
+        [JsonProperty(PropertyName = "username")]
+        public string Username { get; set; }
+        [JsonProperty(PropertyName = "public_metrics")]
+        public UserPublicMetrics PublicMetrics { get; set; }
+        [JsonProperty(PropertyName = "created_at")]
+        public DateTime CreatedAt { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Description { get; set; }
+        [JsonProperty(PropertyName = "verified")]
+        public bool Verified { get; set; }
+        [JsonProperty(PropertyName = "url")]
+        public string Url { get; set; }
+        [JsonProperty(PropertyName = "@protected")]
+        public bool Protected { get; set; }
+        [JsonProperty(PropertyName = "pinned_tweet_id")]
+        public string PinnedTweetId { get; set; }
+        [JsonProperty(PropertyName = "profile_image_url")]
+        public string ProfileImageUrl { get; set; }
+        [JsonProperty(PropertyName = "entities")]
+        public UserEntities Entities { get; set; }
+        [JsonProperty(PropertyName = "location")]
+        public string Location { get; set; }
     }
 }

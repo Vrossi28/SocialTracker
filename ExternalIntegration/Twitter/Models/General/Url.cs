@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ExternalIntegration.Twitter.Models
 {
     public class Url : IUrl
     {
-        public List<UrlDetails> urls { get; set; }
+        [JsonProperty(PropertyName = "urls")]
+        public List<UrlDetails> Urls { get; set; }
     }
 
 }

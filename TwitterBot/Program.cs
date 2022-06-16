@@ -29,7 +29,7 @@ namespace TwitterBot
 
             foreach (var user in users)
             {
-                Console.WriteLine(user.username);
+                Console.WriteLine(user.Username);
             }
         }
     }

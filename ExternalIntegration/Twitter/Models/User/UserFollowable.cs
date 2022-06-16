@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using ExternalIntegration.Twitter.Interfaces.User;
 using ExternalIntegration.Twitter.Models.General;
+using Newtonsoft.Json;
 
 namespace ExternalIntegration.Twitter.Models.User
 {
     public class UserFollowable : IUserFollowable
     {
-        public List<UserBaseData> data { get; set; }
-        public Meta meta { get; set; }
+        [JsonProperty(PropertyName = "data")]
+        public List<UserBaseData> Data { get; set; }
+        [JsonProperty(PropertyName = "meta")]
+        public Meta Meta { get; set; }
     }
 }

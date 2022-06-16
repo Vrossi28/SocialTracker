@@ -2,6 +2,6 @@
 {
     public interface IUserFollow
     {
-        UserFollowData data { get; set; }
+        UserFollowData Data { get; set; }
     }
 }

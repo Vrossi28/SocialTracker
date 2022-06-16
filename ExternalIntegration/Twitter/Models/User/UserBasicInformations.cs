@@ -1,7 +1,10 @@
-﻿namespace ExternalIntegration.Twitter.Models
+﻿using Newtonsoft.Json;
+
+namespace ExternalIntegration.Twitter.Models
 {
     public class UserBasicInformations : IUserBasicInformations
     {
-        public UserBaseData data { get; set; }
+        [JsonProperty(PropertyName = "data")]
+        public UserBaseData Data { get; set; }
     }
 }
