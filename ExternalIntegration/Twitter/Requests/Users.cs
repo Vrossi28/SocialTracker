@@ -228,7 +228,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             List<UserBaseData> followingDontFollowBack = followingResponse.Data.Data.Where(i => followersResponse.Data.Data.Select(x => x.Id).Contains(i.Id) == false).ToList();
 
-            return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followingDontFollowBack, Message = $"{followersResponse.Message}" };
+            return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followingDontFollowBack, Message = $"Total users that don't follow you back: {followingDontFollowBack.Count()}" };
         }
 
         public static async Task<DefaultResponse<List<UserBaseData>>> FollowersDontFollowBack(string username)
@@ -247,7 +247,7 @@ namespace ExternalIntegration.Twitter.Requests
 
             List<UserBaseData> followersDontFollowed = followersResponse.Data.Data.Where(i => followingResponse.Data.Data.Select(x => x.Id).Contains(i.Id) == false).ToList();
 
-            return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followersDontFollowed, Message = $"{followersResponse.Message}" };
+            return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followersDontFollowed, Message = $"Total users that you don't follow back: {followersDontFollowed.Count()}" };
         }
     }
 }

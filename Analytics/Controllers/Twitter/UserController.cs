@@ -89,6 +89,38 @@ namespace Analytics.Controllers.Twitter
         }
 
         /// <summary>
+        /// Get a list of users that you follow that don't follow you back
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Success</response>
+        /// <response code="404">Username requested was not found</response>
+        [HttpGet]
+        [Route("{username}/Following/DontFollowBack")]
+        [Produces("application/json")]
+        // GET: Followers
+        public async Task<DefaultResponse<List<UserBaseData>>> GetFollowingDontFollowBack(string username)
+        {
+            var response = await Users.FollowingDontFollowBack(username);
+            return response;
+        }
+
+        /// <summary>
+        /// Get a list of followers that you don't follow back
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Success</response>
+        /// <response code="404">Username requested was not found</response>
+        [HttpGet]
+        [Route("{username}/Followers/DontFollowBack")]
+        [Produces("application/json")]
+        // GET: Followers
+        public async Task<DefaultResponse<List<UserBaseData>>> GetFollowersDontFollowBack(string username)
+        {
+            var response = await Users.FollowersDontFollowBack(username);
+            return response;
+        }
+
+        /// <summary>
         /// Follow user by username
         /// </summary>
         /// <param name="username">Twitter username</param>
