@@ -14,17 +14,18 @@ namespace TwitterBot
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Follow Tracker");
+            Console.WriteLine("Follow Tracker by Vrossi");
             Console.Write("User: ");
 
             string username = Console.ReadLine();
 
-            //FollowTracker.FollowersDontFollowBack(username);
-            var response = await Users.FollowingDontFollowBack(username);
+            var response = await Users.FollowersDontFollowBack(username);
+            //var response = await Users.FollowingDontFollowBack(username);
 
             var users = response.Data;
 
-            Console.WriteLine($"Following don't follow you back: {users.Count()}");
+            //Console.WriteLine($"Following don't follow you back: {users.Count()}");
+            Console.WriteLine($"Followers that you don't follow back: {users.Count()}");
 
             foreach (var user in users)
             {

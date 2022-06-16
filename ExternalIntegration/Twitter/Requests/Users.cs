@@ -228,5 +228,24 @@ namespace ExternalIntegration.Twitter.Requests
 
             return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followingDontFollowBack, Message = $"{followersResponse.Message}" };
         }
+
+        public static async Task<DefaultResponse<List<UserBaseData>>> FollowersDontFollowBack(string username)
+        {
+            var followersResponse = await GetFollowersByUsername(username);
+            if (followersResponse.Data.data == null)
+            {
+                return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = null, Message = $"{followersResponse.Message}" };
+            }
+            var followingResponse = await GetFollowingByUsername(username);
+
+            if (followingResponse.Data.data == null)
+            {
+                return new DefaultResponse<List<UserBaseData>> { Status = followingResponse.Status, Data = null, Message = $"{followingResponse.Message}" };
+            }
+
+            List<UserBaseData> followersDontFollowed = followersResponse.Data.data.Where(i => followingResponse.Data.data.Select(x => x.id).Contains(i.id) == false).ToList();
+
+            return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followersDontFollowed, Message = $"{followersResponse.Message}" };
+        }
     }
 }
