@@ -20,7 +20,16 @@ namespace TwitterBot
             string username = Console.ReadLine();
 
             //FollowTracker.FollowersDontFollowBack(username);
-            await FollowTracker.FollowingDontFollowBack(username);
+            var response = await Users.FollowingDontFollowBack(username);
+
+            var users = response.Data;
+
+            Console.WriteLine($"Following don't follow you back: {users.Count()}");
+
+            foreach (var user in users)
+            {
+                Console.WriteLine(user.username);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ using Tweetinvi.Iterators;
 using RestSharp;
 using ExternalIntegration.Twitter.Interfaces.User;
 using ExternalIntegration.Twitter.Models.User;
+using System.Linq;
 
 namespace ExternalIntegration.Twitter.Requests
 {
@@ -207,6 +208,25 @@ namespace ExternalIntegration.Twitter.Requests
             }
             
             return new DefaultResponse<IUserFollow> { Status = HttpStatusCode.OK, Data = null, Message = $"You unfollowed {response.ScreenName}!" };
+        }
+
+        public static async Task<DefaultResponse<List<UserBaseData>>> FollowingDontFollowBack(string username)
+        {
+            var followersResponse = await GetFollowersByUsername(username);
+            if (followersResponse.Data.data == null)
+            {
+                return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = null, Message = $"{followersResponse.Message}" };
+            }
+            var followingResponse = await GetFollowingByUsername(username);
+
+            if (followingResponse.Data.data == null)
+            {
+                return new DefaultResponse<List<UserBaseData>> { Status = followingResponse.Status, Data = null, Message = $"{followingResponse.Message}" };
+            }
+
+            List<UserBaseData> followingDontFollowBack = followingResponse.Data.data.Where(i => followersResponse.Data.data.Select(x => x.id).Contains(i.id) == false).ToList();
+
+            return new DefaultResponse<List<UserBaseData>> { Status = followersResponse.Status, Data = followingDontFollowBack, Message = $"{followersResponse.Message}" };
         }
     }
 }
