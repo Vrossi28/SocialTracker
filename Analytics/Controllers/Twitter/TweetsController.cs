@@ -74,5 +74,21 @@ namespace Analytics.Controllers.Twitter
             var response = await Tweets.SearchTweetsByQuote(quote);
             return response;
         }
+
+        /// <summary>
+        /// Retweet last 10 tweets by quote
+        /// </summary>
+        /// <param name="quote">Tweet content that should be published</param>
+        /// <response code="200">Tweet successfully created</response>
+        /// <response code="401">Not authorized to create a tweet</response>
+        [HttpPost]
+        [Route("Retweet/{quote}")]
+        [Produces("application/json")]
+        // POST: CreateTweet
+        public async Task<DefaultResponse<List<IRetweetsData>>> RetweetByQuote([Required] string quote)
+        {
+            var response = await Tweets.RetweetByQuote(quote);
+            return response;
+        }
     }
 }

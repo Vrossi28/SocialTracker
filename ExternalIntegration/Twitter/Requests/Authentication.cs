@@ -50,6 +50,24 @@ namespace ExternalIntegration.Twitter
 
             return response;
         }
+
+        public static RestResponse OAuthAuthenticationWithBody(string urlAuthentication, string urlBase, string urlRequest, string method, Method methodEnum, string body)
+        {
+            OAuthRequest oAclient = OAuthRequest.ForProtectedResource(method, Credentials.ConsumerKey, Credentials.ConsumerKeySecret, Credentials.AccessToken, Credentials.AccessTokenSecret);
+            oAclient.RequestUrl = urlAuthentication;
+            string auth = oAclient.GetAuthorizationHeader();
+
+            var client = new RestClient(urlBase);
+            var request = new RestRequest(urlRequest, methodEnum);
+            request.AddHeader("Authorization", auth);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Cookie", "guest_id=v1%3A164647635225822612");
+            request.AddBody(body);
+
+            RestResponse response = client.Execute(request);
+
+            return response;
+        }
         #region Samples OAuth without TweetInvi
         /*
         public static RestRequest OAuthAuthenticationFollow()

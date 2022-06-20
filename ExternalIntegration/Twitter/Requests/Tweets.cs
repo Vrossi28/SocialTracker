@@ -47,9 +47,9 @@ namespace ExternalIntegration.Twitter.Requests
             RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets", "https://api.twitter.com/2/", 
                 $"users/{idUser}/tweets", "GET", Method.Get);
 
-            var stream = response.Content;
+            var content = response.Content;
 
-            ITweetsBasicInformations result = JsonConvert.DeserializeObject<TweetsBasicInformations>(stream);
+            ITweetsBasicInformations result = JsonConvert.DeserializeObject<TweetsBasicInformations>(content);
 
             List<ITweetsBasicInformations> allTweets = new List<ITweetsBasicInformations>();
             allTweets.Add(result);
@@ -70,9 +70,9 @@ namespace ExternalIntegration.Twitter.Requests
                 response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets?pagination_token={result.Meta.NextToken}", "https://api.twitter.com/2/",
                 $"users/{idUser}/tweets?pagination_token={result.Meta.NextToken}", "GET", Method.Get);
 
-                stream = response.Content;
+                content = response.Content;
 
-                result = JsonConvert.DeserializeObject<TweetsBasicInformations>(stream);
+                result = JsonConvert.DeserializeObject<TweetsBasicInformations>(content);
 
                 if (result.Data != null)
                 {
@@ -121,8 +121,8 @@ namespace ExternalIntegration.Twitter.Requests
                 return new DefaultResponse<ITweetsBasicInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
             }
 
-            var stream = await response.Content.ReadAsStringAsync();
-            var tweets = JsonConvert.DeserializeObject<TweetsBasicInformations>(stream);
+            var content = await response.Content.ReadAsStringAsync();
+            var tweets = JsonConvert.DeserializeObject<TweetsBasicInformations>(content);
 
             if(tweets.Data.Count == 0)
             {
@@ -130,6 +130,41 @@ namespace ExternalIntegration.Twitter.Requests
             }
 
             return new DefaultResponse<ITweetsBasicInformations> { Status = HttpStatusCode.OK, Data = tweets, Message = $"Showing the last 10 tweets with the quote: {quote}" };
+        }
+
+        public static async Task<DefaultResponse<List<IRetweetsData>>> RetweetByQuote(string quote)
+        {
+            var tweets = await SearchTweetsByQuote(quote);
+
+            if(tweets.Data == null)
+            {
+                return new DefaultResponse<List<IRetweetsData>> { Status = tweets.Status, Data = null, Message = $"Error: {tweets.Message}" };
+            }
+
+            List<long> tweetsId = new List<long>();
+            
+            foreach (var tweet in tweets.Data.Data)
+            {
+                tweetsId.Add(tweet.Id);
+            }
+
+            List<IRetweetsData> content = new List<IRetweetsData>();
+
+            foreach (var tweet in tweetsId) {
+                string body = @"{" + "\n" + @$"""tweet_id"": ""{tweet}""" + "\n" + @"}";
+                RestResponse response = Authentication.OAuthAuthenticationWithBody($"https://api.twitter.com/2/users/{Credentials.IdUser}/retweets", "https://api.twitter.com/2/",
+                    $"users/{Credentials.IdUser}/retweets", "POST", Method.Post, body);
+                var result = JsonConvert.DeserializeObject<RetweetsData>(response.Content);
+                var retweet = await GetSingleTweetById(tweet);
+                content.Add(new RetweetsData { Data = retweet.Data as TweetsData, Status = result.Status});
+            }
+
+            if(content.Count == 0)
+            {
+                return new DefaultResponse<List<IRetweetsData>> { Status = HttpStatusCode.NoContent, Data = null, Message = $"No tweets found searching by the quote: {quote}" };
+            }
+
+            return new DefaultResponse<List<IRetweetsData>> { Status = HttpStatusCode.OK, Data = content, Message = $"Successfully retweeted" };
         }
     }
 }
