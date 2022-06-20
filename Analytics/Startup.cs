@@ -49,7 +49,6 @@ namespace Analytics
 
             app.UseRouting();
 
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

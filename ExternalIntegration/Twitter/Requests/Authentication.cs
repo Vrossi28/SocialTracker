@@ -10,7 +10,6 @@ namespace ExternalIntegration.Twitter
 {
     public static class Authentication
     {
-
         public static HttpClient BaseApi()
         {
             HttpClient httpClient = new HttpClient();

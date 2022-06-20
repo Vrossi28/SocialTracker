@@ -110,5 +110,26 @@ namespace ExternalIntegration.Twitter.Requests
 
             return new DefaultResponse<ITweetsAllData> { Status = HttpStatusCode.OK, Data = tweet, Message = $"Your tweet has been published!" };
         }
+
+        public static async Task<DefaultResponse<ITweetsBasicInformations>> SearchTweetsByQuote(string quote)
+        {
+            var httpClient = Authentication.BearerAuthentication();
+            var response = await httpClient.GetAsync($"tweets/search/recent?query={quote}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new DefaultResponse<ITweetsBasicInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
+            }
+
+            var stream = await response.Content.ReadAsStringAsync();
+            var tweets = JsonConvert.DeserializeObject<TweetsBasicInformations>(stream);
+
+            if(tweets.Data.Count == 0)
+            {
+                return new DefaultResponse<ITweetsBasicInformations> { Status = HttpStatusCode.NoContent, Data = null, Message = $"No tweets found searching by the quote: {quote}" };
+            }
+
+            return new DefaultResponse<ITweetsBasicInformations> { Status = HttpStatusCode.OK, Data = tweets, Message = $"Showing the last 10 tweets with the quote: {quote}" };
+        }
     }
 }

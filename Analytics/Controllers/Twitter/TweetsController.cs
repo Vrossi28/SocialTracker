@@ -57,5 +57,22 @@ namespace Analytics.Controllers.Twitter
             var response = await Tweets.CreateTweet(status);
             return response;
         }
+
+        /// <summary>
+        /// Search tweets
+        /// </summary>
+        /// <param name="quote">Quote that should be searched</param>
+        /// <response code="200">Success</response>
+        /// <response code="204">No content</response>
+        /// <response code="401">Not authorized to search quotes</response>
+        [HttpGet]
+        [Route("SearchTweets/{quote}")]
+        [Produces("application/json")]
+        // POST: CreateTweet
+        public async Task<DefaultResponse<ITweetsBasicInformations>> SearchTweetsByQuote(string quote)
+        {
+            var response = await Tweets.SearchTweetsByQuote(quote);
+            return response;
+        }
     }
 }
