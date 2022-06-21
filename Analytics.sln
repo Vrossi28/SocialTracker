@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analytics", "Analytics\Anal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExternalIntegration", "ExternalIntegration\ExternalIntegration.csproj", "{CBF321D2-4469-42F1-83E2-7CAD43D5EFDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterBot", "TwitterBot\TwitterBot.csproj", "{5293318F-F08C-4C13-AC5E-8867D3DB500E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitterBot", "TwitterBot\TwitterBot.csproj", "{5293318F-F08C-4C13-AC5E-8867D3DB500E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterBot.Data", "TwitterBot.Data\TwitterBot.Data.csproj", "{13F4F795-137C-46D9-856D-280C5E4D34D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5293318F-F08C-4C13-AC5E-8867D3DB500E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5293318F-F08C-4C13-AC5E-8867D3DB500E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5293318F-F08C-4C13-AC5E-8867D3DB500E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13F4F795-137C-46D9-856D-280C5E4D34D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13F4F795-137C-46D9-856D-280C5E4D34D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13F4F795-137C-46D9-856D-280C5E4D34D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13F4F795-137C-46D9-856D-280C5E4D34D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

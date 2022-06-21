@@ -1,5 +1,7 @@
 ﻿using ExternalIntegration.Twitter.Interfaces.Tweets;
+using ExternalIntegration.Twitter.Interfaces.User;
 using ExternalIntegration.Twitter.Models.Tweets;
+using ExternalIntegration.Twitter.Models.User;
 using ExternalIntegration.Twitter.Responses;
 using Newtonsoft.Json;
 using OAuth;

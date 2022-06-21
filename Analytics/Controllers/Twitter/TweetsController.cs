@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using ExternalIntegration.Twitter.Interfaces.User;
 
 namespace Analytics.Controllers.Twitter
 {

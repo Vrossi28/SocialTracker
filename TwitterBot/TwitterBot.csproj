@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ExternalIntegration\ExternalIntegration.csproj" />
+    <ProjectReference Include="..\TwitterBot.Data\TwitterBot.Data.csproj" />
   </ItemGroup>
 
 </Project>
