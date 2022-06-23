@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using ExternalIntegration;
 
 namespace Analytics
 {

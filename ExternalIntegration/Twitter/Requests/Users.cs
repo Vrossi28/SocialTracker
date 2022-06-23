@@ -28,6 +28,12 @@ namespace ExternalIntegration.Twitter.Requests
 
             IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
 
+            using (var db = new SocialTrackerContext())
+            {
+                db.User.Add(result.Data);
+                db.SaveChanges();
+            }
+
             if (result.Data == null)
             {
                 return new DefaultResponse<IUserBasicInformations> { Status = response.StatusCode, Data = null, Message = $"Error: {response.ReasonPhrase}" };
@@ -43,7 +49,7 @@ namespace ExternalIntegration.Twitter.Requests
             HttpClient httpClient = Authentication.BearerAuthentication();
             var response = await httpClient
                 .GetAsync($"users/by/username/{username}?user.fields=created_at%2Cpublic_metrics%2Cpinned_tweet_id%2Cprofile_image_url%2Cprotected" +
-                $"%2Clocation%2Cdescription%2Centities%2Curl");
+                $"%2Clocation%2Cdescription%2Centities%2Curl%2Cverified");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -53,6 +59,13 @@ namespace ExternalIntegration.Twitter.Requests
             var stream = await response.Content.ReadAsStringAsync();
 
             IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
+
+            using (var db = new SocialTrackerContext())
+            {
+                var userAllData = result.Data;
+                db.UserAllData.Add(userAllData);
+                db.SaveChanges();
+            }
 
             if (result.Data == null)
             {

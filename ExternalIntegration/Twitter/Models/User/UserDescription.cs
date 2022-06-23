@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace ExternalIntegration.Twitter.Models
 {
+    [Keyless]
     public class UserDescription : IUserDescription
     {
         [JsonProperty(PropertyName = "urls")]

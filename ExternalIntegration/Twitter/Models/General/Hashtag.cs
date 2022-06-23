@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace ExternalIntegration.Twitter.Models
 {
+    [Keyless]
     public class Hashtag : IHashtag
     {
         [JsonProperty(PropertyName = "start")]

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExternalIntegration.Twitter.Models
 {
+    [NotMapped]
     public class UserPublicMetrics : IUserPublicMetrics
     {
         [JsonProperty(PropertyName = "followers_count")]

@@ -2,13 +2,13 @@
 {
     public static class Credentials
     {
-        public static string Bearer { get; private set; } = "AAAAAAAAAAAAAAAAAAAAAJ31dQEAAAAAMgt8fFoRcU%2BCbVmiGG%2B9COHp2dM%3DPhHsURQK726lJx0XAvGzdQlTB8Z2bQcD4BpRybrwfMhggtsthE";
-        public static string ConsumerKey { get; private set; } = "OH1Axraqn10aCcaqy0LOPL4tK";
-        public static string ConsumerKeySecret { get; private set; } = "y1s3rR72Rsabrncb5yhxycyBjJdW7xOT3gRtlALHonARQ66F3q";
-        public static string AccessToken { get; private set; } = "1347955168495755264-TObGEJ4SVUeqj0smGiIW2ZrZfnVEmV";
-        public static string AccessTokenSecret { get; private set; } = "P9ein9rJXIvt4T3105i3G6FsYoTeMOxLSHLfIfwwJcu4M";
+        public static string Bearer { get; private set; } = "AAAAAAAAAAAAAAAAAAAAAJ31dQEAAAAAp1QEy%2FjvtX6%2BTAJUGupSjf7FN90%3DryKPMbrUqB83V6vOOzplbxFzdUli1WjvTgG6n4oVU6kWVtNcEb";
+        public static string ConsumerKey { get; private set; } = "ydvo1Y7Z6ZOO6Zc5TW307eSiK";
+        public static string ConsumerKeySecret { get; private set; } = "eUt6W0NX5IFRzB1eqofrsUUyYxSlznqEFgODxT3kaTAZWLxkPd";
+        public static string AccessToken { get; private set; } = "1347955168495755264-F7EFJzRDASMrrrgYcTOdXksVlcZ2Le";
+        public static string AccessTokenSecret { get; private set; } = "EXUq8iCX9tCijKP7FbSwT6EkNAg9R7UQYX8x8eHaPUCVK";
         public static string ClientId { get; private set; } = "cG9BWWN1VTE3b3VZdElxbGMzMW46MTpjaQ";
-        public static string ClientIdSecret { get; private set; } = "qnI7fdM0Y2J_JUAcKRiatGNarjKtKT2GbGdivc7sItghmYYxgf";
+        public static string ClientIdSecret { get; private set; } = "f5dNNwnvDCe-ZNJrlvcm5mTF1djhgnnvDyWveZmmy0ZjobneFh";
         public static string IdUser { get; private set; } = "1347955168495755264";
 
     }

@@ -1,7 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExternalIntegration.Twitter.Models
 {
+    [Keyless]
+    [NotMapped]
     public class UserEntities : IUserEntities
     {
         [JsonProperty(PropertyName = "url")]
