@@ -21,7 +21,7 @@ namespace ExternalIntegration.Twitter.Models
         public bool Verified { get; set; }
         [JsonProperty(PropertyName = "url")]
         public string Url { get; set; }
-        [JsonProperty(PropertyName = "@protected")]
+        [JsonProperty(PropertyName = "protected")]
         public bool Protected { get; set; }
         [JsonProperty(PropertyName = "pinned_tweet_id")]
         public string PinnedTweetId { get; set; }
