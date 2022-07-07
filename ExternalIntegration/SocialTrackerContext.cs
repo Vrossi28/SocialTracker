@@ -14,6 +14,6 @@ namespace ExternalIntegration
         public DbSet<UserAllData> UserAllData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlServer(@"Data Source=SDME_LTROSSI\VROSSISK;Initial Catalog=SocialTracker;User ID =stadmin; Password=tr1m@is..");
+        => options.UseSqlServer(@"Data Source=DATA_SOURCE;Initial Catalog=INITIAL_CATALOG;User ID =LOGIN; Password=PASSWORD");
     }
 }
