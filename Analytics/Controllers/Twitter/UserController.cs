@@ -2,6 +2,7 @@
 using ExternalIntegration.Twitter.Models;
 using ExternalIntegration.Twitter.Requests;
 using ExternalIntegration.Twitter.Responses;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using Tweetinvi.Models;
 namespace Analytics.Controllers.Twitter
 {
     [ApiController]
+    [EnableCors]
     [Route("[controller]")]
     public class UserController : Controller
     {
@@ -54,6 +56,9 @@ namespace Analytics.Controllers.Twitter
         public async Task<DefaultResponse<IUserAllInformations>> GetAllDataByUsername(string username)
         {
             var response = await Users.GetAllDataByUsername(username);
+
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "http://localhost:3000");
+
             return response;
         }
 

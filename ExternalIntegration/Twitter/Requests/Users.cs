@@ -28,11 +28,11 @@ namespace ExternalIntegration.Twitter.Requests
 
             IUserBasicInformations result = JsonConvert.DeserializeObject<UserBasicInformations>(stream);
 
-            using (var db = new SocialTrackerContext())
+            /*using (var db = new SocialTrackerContext())
             {
                 db.User.Add(result.Data);
                 db.SaveChanges();
-            }
+            }*/
 
             if (result.Data == null)
             {
@@ -60,12 +60,12 @@ namespace ExternalIntegration.Twitter.Requests
 
             IUserAllInformations result = JsonConvert.DeserializeObject<UserAllInformations>(stream);
 
-            using (var db = new SocialTrackerContext())
+            /*using (var db = new SocialTrackerContext())
             {
                 var userAllData = result.Data;
                 db.UserAllData.Add(userAllData);
                 db.SaveChanges();
-            }
+            }*/
 
             if (result.Data == null)
             {

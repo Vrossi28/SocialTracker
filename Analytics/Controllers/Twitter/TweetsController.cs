@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using ExternalIntegration.Twitter.Interfaces.User;
+using Microsoft.AspNetCore.Cors;
 
 namespace Analytics.Controllers.Twitter
 {
     [ApiController]
+    [EnableCors]
     [Route("[controller]")]
     public class TweetsController : Controller
     {
