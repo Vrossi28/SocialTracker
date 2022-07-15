@@ -36,6 +36,41 @@ namespace ExternalIntegration.Twitter.Requests
             return new DefaultResponse<ITweetsAllData> { Status = HttpStatusCode.OK, Data = tweet, Message = "OK" };
         }
 
+        public static async Task<DefaultResponse<ITweetsBaseData>> GetLastTweetFromUserByUsername(string username)
+        {
+            var user = await Users.GetBaseDataByUsername(username);
+            if (user.Message != "OK")
+            {
+                return new DefaultResponse<ITweetsBaseData> { Status = user.Status, Data = null, Message = $"{user.Message}" };
+            }
+
+            var idUser = user.Data.Data.Id;
+
+            RestResponse response = Authentication.OAuthAuthentication($"https://api.twitter.com/2/users/{idUser}/tweets", "https://api.twitter.com/2/",
+                $"users/{idUser}/tweets", "GET", Method.Get);
+
+            var content = response.Content;
+
+            ITweetsBasicInformations result = JsonConvert.DeserializeObject<TweetsBasicInformations>(content);
+
+            TweetsBaseData baseData = new TweetsBaseData();
+
+            for (int i = 0; i < 1; i++)
+            {
+                foreach(var tweet in result.Data)
+                {
+                    baseData = tweet;
+                }
+            }
+
+            if (result.Data == null)
+            {
+                return new DefaultResponse<ITweetsBaseData> { Status = 404, Data = null, Message = $"User id {idUser} not found!" };
+            }
+
+            return new DefaultResponse<ITweetsBaseData> { Status = HttpStatusCode.OK, Data = baseData, Message = $"OK" };
+        }
+
         public static async Task<DefaultResponse<List<ITweetsBasicInformations>>> GetTweetsFromUserByUsername(string username)
         {
             var user = await Users.GetBaseDataByUsername(username);

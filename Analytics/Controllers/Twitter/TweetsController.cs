@@ -46,6 +46,21 @@ namespace Analytics.Controllers.Twitter
         }
 
         /// <summary>
+        /// Get last tweet from user by username
+        /// </summary>
+        /// <param name="username">Twitter username</param>
+        /// <response code="200">Returns last tweet from requested username</response>
+        /// <response code="404">Username requested was not found</response>
+        [HttpGet]
+        [Route("LastTweetFromUser/{username}")]
+        [Produces("application/json")]
+        public async Task<DefaultResponse<ITweetsBaseData>> GetLastTweetFromUserByUsername(string username)
+        {
+            var response = await Tweets.GetLastTweetFromUserByUsername(username);
+            return response;
+        }
+
+        /// <summary>
         /// Create a tweet
         /// </summary>
         /// <param name="status">Tweet content that should be published</param>
